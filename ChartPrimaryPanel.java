@@ -9,17 +9,18 @@ import java.time.format.DateTimeFormatter;
 
 public class ChartPrimaryPanel extends JPanel{
     private JPanel SitePanel;
-    private JButton RefreshBtn, SiteBtn_M, SiteBtn_B, SiteBtn_G;
+    private JButton RefreshBtn, SiteBtn_M, SiteBtn_B, SiteBtn_G, SearchBtn;
     private JLabel RefreshLabel;
+    private JComboBox strCombo;
 
     private int RefreshTime;
     private int Site_M_B_G = 1;
 
-    private ButtonListener ButtonRefresh, ButtonMelon, ButtonBugs, ButtonGenie;
+    private ButtonListener ButtonRefresh, ButtonMelon, ButtonBugs, ButtonGenie, ButtonSearch;
 
     private String SearchArtist, SearchMusic, SearchWindow;
     private String MelonSite, BugsSite, GenieSite;
-
+    private String[] SearchCategory = {"Artist", "Name"};
 
     private JTextField Searchtxt;
 
@@ -49,16 +50,28 @@ public class ChartPrimaryPanel extends JPanel{
         ButtonMelon = new ButtonListener();
         ButtonBugs = new ButtonListener();
         ButtonGenie = new ButtonListener();
+        ButtonSearch = new ButtonListener();
 
-        Searchtxt = new JTextField(1000);
-        Searchtxt.setBounds(100,30,1000,40);
+        strCombo = new JComboBox(SearchCategory);
+        strCombo.setBounds(100, 30, 150,40);
+        add(strCombo);
+
+        Searchtxt = new JTextField(700);
+        Searchtxt.setBounds(250,30,700,40);
         add(Searchtxt);
+
+        SearchBtn = new JButton("Search");
+        SearchBtn.setBounds(950,30,150,40);
+        SearchBtn.setForeground(Color.DARK_GRAY);
+        SearchBtn.setBackground(Color.lightGray);
+        SearchBtn.addActionListener(ButtonRefresh);
+        add(SearchBtn);
 
         RefreshBtn = new JButton(new ImageIcon("Image/Refresh1.png"));
         RefreshBtn.setBounds(30,30,40,40);
         RefreshBtn.setForeground(Color.DARK_GRAY);
         RefreshBtn.setBackground(Color.lightGray);
-        RefreshBtn.addActionListener(ButtonRefresh);
+        RefreshBtn.addActionListener(ButtonSearch);
         add(RefreshBtn);
 
         LocalDateTime current = LocalDateTime.now();

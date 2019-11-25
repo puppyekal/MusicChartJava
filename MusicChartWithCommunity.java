@@ -9,7 +9,6 @@ public class MusicChartWithCommunity {
         ChartPrimaryPanel primary = new ChartPrimaryPanel();
         frame.getContentPane().add(primary);
 
-
         frame.pack();
         frame.setVisible(true);
     }
