@@ -142,6 +142,17 @@ public class SitePanel extends JPanel {
 		return strChartName + " 음악 차트 TOP 100";
 	}
 	
+	/*
+	Name: filter
+	Parameter: (String) Text to search, (int) Name(2) or singer(3)
+	Returns: -
+	Description: search and display only matched results
+	*/
+	public void filter(String text, int criteria) {
+		if(text == null) tableSorter.setRowFilter(null);
+		else tableSorter.setRowFilter(RowFilter.regexFilter(text, criteria));
+	}
+	
 	//table model class
 	private class ChartModel extends AbstractTableModel {
 		private String[] arrColumnName;
