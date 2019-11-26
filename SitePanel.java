@@ -110,8 +110,11 @@ public class SitePanel extends JPanel {
 	public void setStrChartName(String name) {
 		strChartName = name;
 	}
-	public JTable getListChart() {
+	public JTable getTableChart() {
 		return tableChart;
+	}
+	public ChartModel getTableModel() {
+		return tableModel;
 	}
 	public Music[] getMusics() {
 		return arrMusic;
@@ -154,7 +157,7 @@ public class SitePanel extends JPanel {
 	}
 	
 	//table model class
-	private class ChartModel extends AbstractTableModel {
+	class ChartModel extends AbstractTableModel {
 		private String[] arrColumnName;
 		private Object[][] chartData;
 		
