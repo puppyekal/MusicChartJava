@@ -12,8 +12,8 @@ import org.jsoup.select.Elements;
 
 /**
  * 
- * @author SejongUniv 18011569 오창한
- * @version 1.0
+ * @author SejongUniv 오창한
+ * @version Beta 1.0
  *
  **/
 
