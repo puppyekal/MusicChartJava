@@ -4,7 +4,7 @@ import org.json.simple.JSONObject;
 /**
  * 
  * @author SejongUniv ø¿√¢«—
- * @version Beta 1.0
+ * @version 1.1
  *
  **/
 

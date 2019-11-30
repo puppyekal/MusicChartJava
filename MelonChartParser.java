@@ -13,7 +13,7 @@ import org.jsoup.select.Elements;
 /**
  * 
  * @author SejongUniv 오창한
- * @version Beta 1.0
+ * @version 1.1
  *
  **/
 
@@ -94,8 +94,8 @@ public class MelonChartParser extends MusicChartParser {
 		url = "https://www.melon.com/chart/index.htm";
 
 		try {
-			// 멜론 차트 연결에 필요한 header 설정 및 연결(1~50)
-			Connection melonConnection1_50 = Jsoup.connect(url).header("Accept",
+			// 멜론 차트 연결에 필요한 header 설정 및 연결
+			Connection melonConnection = Jsoup.connect(url).header("Accept",
 					"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
 					.header("Sec-Fetch-User", "?1").header("Upgrade-Insecure-Requests", "1")
 					.header("User-Agent",
@@ -103,10 +103,13 @@ public class MelonChartParser extends MusicChartParser {
 					.method(Connection.Method.GET);
 
 			// 연결 후 웹페이지를 긁어옴
-			Document melonDocument1_50 = melonConnection1_50.get();
+			Document melonDocument = melonConnection.get();
 
 			// 1~50위에 대한 정보를 불러옴, 순위와 곡의 상세한 정보를 뽑기 위한 링크를 뽑는 용도로 사용
-			Elements data1st50 = melonDocument1_50.select("tr.lst50");
+			Elements data1st50 = melonDocument.select("tr.lst50");
+			
+			// 51~100위에 대한 정보를 불러옴, 순위와 곡의 상세한 정보를 뽑기 위한 링크를 뽑는 용도로 사용
+			Elements data51st100 = melonDocument.select("tr.lst100");
 
 			chartList = new JSONArray();
 
@@ -135,7 +138,7 @@ public class MelonChartParser extends MusicChartParser {
 				String likeNumUrl = "https://www.melon.com/commonlike/getSongLike.json?contsIds="
 						+ songAllInfo.get("songId").toString();
 
-				Document test = Jsoup.connect(likeNumUrl).header("Accept",
+				Document likeNumDocument = Jsoup.connect(likeNumUrl).header("Accept",
 						"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
 						.header("Sec-Fetch-User", "?1").header("Upgrade-Insecure-Requests", "1")
 						.header("User-Agent",
@@ -143,7 +146,7 @@ public class MelonChartParser extends MusicChartParser {
 						.ignoreContentType(true).get();
 
 				JSONParser parser = new JSONParser();
-				JSONObject obj = (JSONObject) parser.parse(test.text());
+				JSONObject obj = (JSONObject) parser.parse(likeNumDocument.text());
 				songAllInfo.put("likeNum",
 						((JSONObject) (((JSONArray) obj.get("contsLike")).get(0))).get("SUMMCNT").toString());
 
@@ -155,21 +158,7 @@ public class MelonChartParser extends MusicChartParser {
 				songCount++;
 			}
 
-			// 멜론 차트 연결에 필요한 header 설정 및 연결(51~100)
-			Connection melonConnection51_100 = Jsoup.connect(url).header("Accept",
-					"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
-					.header("Sec-Fetch-User", "?1").header("Upgrade-Insecure-Requests", "1")
-					.header("User-Agent",
-							"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36")
-					.method(Connection.Method.GET);
-
-			// 연결 후 웹페이지를 긁어옴
-			Document melonDocument51_100 = melonConnection51_100.get();
-
-			// 51~100위에 대한 정보를 불러옴, 순위와 곡의 상세한 정보를 뽑기 위한 링크를 뽑는 용도로 사용
-			Elements data51st100 = melonDocument51_100.select("tr.lst100");
-
-			for (Element elem : data51st100) {
+			for (Element elem : data51st100) { // 51~100위에 대한 내용 파싱
 				// JSONObject에 데이터를 넣기 위한 작업
 				HashMap<String, Object> songAllInfo = new HashMap<String, Object>();
 
@@ -192,20 +181,17 @@ public class MelonChartParser extends MusicChartParser {
 				// key : albumName, value : 앨범 이름
 				songAllInfo.put("albumName", elem.select("div.ellipsis").get(2).select("a").text().toString());
 
-				String likeNumUrl = "https://www.melon.com/commonlike/getSongLike.json?contsIds="
-						+ songAllInfo.get("songId").toString();
+				String likeNumUrl = "https://www.melon.com/commonlike/getSongLike.json?contsIds=" + songAllInfo.get("songId").toString();
 
-				Document test = Jsoup.connect(likeNumUrl).header("Accept",
-						"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
-						.header("Sec-Fetch-User", "?1").header("Upgrade-Insecure-Requests", "1")
-						.header("User-Agent",
-								"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36")
+				Document likeNumDocument = Jsoup.connect(likeNumUrl).header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
+						.header("Sec-Fetch-User", "?1")
+						.header("Upgrade-Insecure-Requests", "1")
+						.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36")
 						.ignoreContentType(true).get();
 
 				JSONParser parser = new JSONParser();
-				JSONObject obj = (JSONObject) parser.parse(test.text());
-				songAllInfo.put("likeNum",
-						((JSONObject) (((JSONArray) obj.get("contsLike")).get(0))).get("SUMMCNT").toString());
+				JSONObject obj = (JSONObject) parser.parse(likeNumDocument.text());
+				songAllInfo.put("likeNum", ((JSONObject) (((JSONArray) obj.get("contsLike")).get(0))).get("SUMMCNT").toString());
 
 				// 값들을 JSONObject로 변환
 				JSONObject jsonSongInfo = new JSONObject(songAllInfo);
@@ -215,11 +201,13 @@ public class MelonChartParser extends MusicChartParser {
 				songCount++;
 			}
 
+			// 파싱 결과 출력(테스트용)
+			/*
 			for (Object o : chartList) {
-				if (o instanceof JSONObject) {
+				if (o instanceof JSONObject)
 					System.out.println(((JSONObject) o));
-				}
 			}
+			*/
 
 		}
 		catch (HttpStatusException e) {

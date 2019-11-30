@@ -13,7 +13,7 @@ import org.jsoup.select.Elements;
 /**
  * 
  * @author SejongUniv 오창한
- * @version 1.0
+ * @version 1.1
  *
  **/
 
@@ -129,7 +129,7 @@ public class BugsChartParser extends MusicChartParser {
 
 				// key : albumName, value : 앨범 이름
 				songAllInfo.put("albumName", elem.select("td.left").get(1).select("a").first().text().toString());
-
+				
 				// 값들을 JSONObject로 변환
 				JSONObject jsonSongInfo = new JSONObject(songAllInfo);
 
@@ -138,11 +138,13 @@ public class BugsChartParser extends MusicChartParser {
 				songCount++;
 			}
 
+			// 파싱 결과 출력(테스트용)
+			/*
 			for (Object o : chartList) {
-				if (o instanceof JSONObject) {
+				if (o instanceof JSONObject)
 					System.out.println(((JSONObject) o));
-				}
 			}
+			*/
 
 		}
 		catch (HttpStatusException e) {

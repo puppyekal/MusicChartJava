@@ -12,7 +12,7 @@ import org.jsoup.select.Elements;
 /**
  * 
  * @author SejongUniv 오창한
- * @version 1.0
+ * @version 1.1
  *
  **/
 
@@ -94,7 +94,7 @@ public class GenieChartParser extends MusicChartParser {
 
 		try {
 			// 지니 차트 연결에 필요한 header 설정 및 연결
-			Connection genieConnection = Jsoup.connect(url).header("Accept",
+			Connection genieConnection1_50 = Jsoup.connect(url).header("Accept",
 					"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
 					.header("Upgrade-Insecure-Requests", "1")
 					.header("User-Agent",
@@ -102,14 +102,14 @@ public class GenieChartParser extends MusicChartParser {
 					.method(Connection.Method.GET);
 
 			// 연결 후 웹페이지를 긁어옴
-			Document genieDocument = genieConnection.get();
+			Document genieDocument1_50 = genieConnection1_50.get();
 
 			// 1~100위에 대한 정보를 불러옴
-			Elements data1st100 = genieDocument.select("table.list-wrap").first().select("tbody > tr.list");
+			Elements data1st50 = genieDocument1_50.select("table.list-wrap").first().select("tbody > tr.list");
 
 			chartList = new JSONArray();
 
-			for (Element elem : data1st100) { // 1~100위에 대한 내용 파싱
+			for (Element elem : data1st50) { // 1~50위에 대한 내용 파싱
 				// JSONObject에 데이터를 넣기 위한 작업
 				HashMap<String, Object> songAllInfo = new HashMap<String, Object>();
 
@@ -139,12 +139,59 @@ public class GenieChartParser extends MusicChartParser {
 				chartList.add(jsonSongInfo);
 				songCount++;
 			}
+			
+			String url51_100 = genieDocument1_50.select("div.page-nav.rank-page-nav").first().select("a").get(1).attr("href").toString();
+			
+			// 지니 차트 연결에 필요한 header 설정 및 연결
+			Connection genieConnection51_100 = Jsoup.connect(url + url51_100).header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
+					.header("Sec-Fetch-User", "?1")
+					.header("Upgrade-Insecure-Requests", "1")
+					.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36")
+					.method(Connection.Method.GET);
+			
+			// 연결 후 웹페이지를 긁어옴
+			Document genieDocument51_100 = genieConnection51_100.get();
 
-			for (Object o : chartList) {
-				if (o instanceof JSONObject) {
-					System.out.println(((JSONObject) o));
-				}
+			// 51~100위에 대한 정보를 불러옴
+			Elements data51st100 = genieDocument51_100.select("table.list-wrap").first().select("tbody > tr.list");
+
+			for (Element elem : data51st100) { // 51~100위에 대한 내용 파싱
+				// JSONObject에 데이터를 넣기 위한 작업
+				HashMap<String, Object> songAllInfo = new HashMap<String, Object>();
+
+				// key : songId, value : 노래 아이디
+				songAllInfo.put("songId", elem.attr("songId").toString());
+
+				// key : rank, value : 순위
+				songAllInfo.put("rank", elem.select("td.number").first().text().toString().split(" ")[0]);
+
+				// key : smallImageUrl, value : 작은 이미지 url 링크
+				songAllInfo.put("smallImageUrl", "https:" + elem.select("td").get(2).select("img").first().attr("src").toString());
+
+				// key : title, value : 노래 제목
+				songAllInfo.put("title", elem.select("td.info").first().select("a").first().text().toString());
+
+				// key : artist, value : 가수 이름
+				songAllInfo.put("artist", elem.select("td.info").first().select("a").get(1).text().toString());
+
+				// key : albumName, value : 앨범 이름
+				songAllInfo.put("albumName", elem.select("td.info").first().select("a").get(2).text().toString());
+
+				// 값들을 JSONObject로 변환
+				JSONObject jsonSongInfo = new JSONObject(songAllInfo);
+
+				// JSONArray에 값 추가
+				chartList.add(jsonSongInfo);
+				songCount++;
 			}
+			
+			// 파싱 결과 출력(테스트용)
+			/*
+			for (Object o : chartList) {
+				if (o instanceof JSONObject)
+					System.out.println(((JSONObject) o));
+			}
+			*/
 
 		} catch (HttpStatusException e) {
 			e.printStackTrace();
