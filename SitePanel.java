@@ -1,9 +1,13 @@
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Comparator;
 import javax.swing.*;
 import javax.swing.table.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 @SuppressWarnings("serial")
 public class SitePanel extends JPanel {
@@ -18,22 +22,21 @@ public class SitePanel extends JPanel {
 	private ChartModel tableModel;
 	//sorter/filter of the chart
 	private TableRowSorter<ChartModel> tableSorter;
-	//Music array with length of 100
-	private Music[] arrMusic;
-	//scroll bar next to the displayed list
+	//JSONArray which stores information of musics
+	private JSONArray arrMusic;
+	//tableChart + a scroll bar
 	private JScrollPane scrollBar;
 	//background/foreground colors
-	private static Color TITLECOLOR = Color.blue;
+	private static Color TITLECOLOR = new Color(525484);
 	private static Color TEXTCOLOR = Color.black;
-	private static Color LBLBACKGROUND = Color.white;
+	private static Color LBLBACKGROUND = new Color(234, 234, 234);
 	private static Color LISTBACKGROUND = Color.white;
 	//listener object
 	private ClickListener clkListener;
 	
 	// - - - - - Constructor - - - - -
-	public SitePanel(String name, Music[] musics) {
+	public SitePanel(String name, MusicChartParser parser) {
 		strChartName = name;
-		arrMusic = musics;
 		
 		clkListener = new ClickListener();
 		
@@ -44,12 +47,16 @@ public class SitePanel extends JPanel {
 		setFont(new Font("굴림", Font.BOLD, 64));
 		
 		lblTitle = new JLabel(toString());
+		lblTitle.setBackground(Color.white);
 		lblTitle.setForeground(TITLECOLOR);
 		lblTitle.setBounds(80, 30, 840, 80);
 		lblTitle.setFont(new Font("굴림", Font.BOLD, 48));
 		lblTitle.setHorizontalAlignment(SwingConstants.LEFT);
 		lblTitle.setVerticalAlignment(SwingConstants.CENTER);
 		add(lblTitle);
+		
+		if(!parser.isParsed()) parser.chartDataParsing();
+		arrMusic = parser.getChartList();
 		
 		tableModel = new ChartModel(arrMusic);
 		
@@ -67,7 +74,7 @@ public class SitePanel extends JPanel {
 		tableChart.setFont(new Font("굴림", Font.PLAIN, 18));
 		tableChart.setRowHeight(60);
 		TableColumn column;
-		for(int i = 0; i < 6; i++) {
+		for(int i = 0; i < 5; i++) {
 			column = tableChart.getColumnModel().getColumn(i);
 			switch(i) {
 			case 0:
@@ -77,16 +84,13 @@ public class SitePanel extends JPanel {
 				column.setPreferredWidth(60);
 				break;
 			case 2:
-				column.setPreferredWidth(240);
+				column.setPreferredWidth(280);
 				break;
 			case 3:
 				column.setPreferredWidth(180);
 				break;
 			case 4:
-				column.setPreferredWidth(240);
-				break;
-			case 5:
-				column.setPreferredWidth(80);
+				column.setPreferredWidth(280);
 				break;
 			}
 			column.setResizable(false);
@@ -116,23 +120,30 @@ public class SitePanel extends JPanel {
 	public ChartModel getTableModel() {
 		return tableModel;
 	}
-	public Music[] getMusics() {
+	public JSONArray getMusics() {
 		return arrMusic;
 	}
-	public Music getMusic(int index) {
-		if(index < 0 || index > 99) return null;
-		return arrMusic[index];
+	public JSONObject getMusic(int index) {
+		if(arrMusic == null) return null;
+		if(index < 0 || index >= arrMusic.size()) return null;
+		return (JSONObject) arrMusic.get(index);
 	}
-	public void setMusics(Music[] arr) {
+	public void setMusics(JSONArray arr) {
 		tableSorter.setRowFilter(null);
 		arrMusic = arr;
-		for(int i = 0; i < 100; i++) {
-			tableModel.setValueAt(arr[i].getnRank(), i, 0);
-			tableModel.setValueAt(arr[i].getImage(), i, 1);
-			tableModel.setValueAt(arr[i].getStrName(), i, 2);
-			tableModel.setValueAt(arr[i].getStrSinger(), i, 3);
-			tableModel.setValueAt(arr[i].getStrAlbum(), i, 4);
-			tableModel.setValueAt("♥" + arr[i].getnLikes(), i, 5);
+		
+		JSONObject obj;
+		for(int i = 0; i < arr.size(); i++) {
+			obj = (JSONObject) arr.get(i);
+			tableModel.setValueAt(Integer.parseInt((String) (obj.get("rank"))), i, 0);
+			try {
+				tableModel.setValueAt(new ImageIcon(new URL((String) obj.get("smallImageUrl"))) , i, 1);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+			tableModel.setValueAt((String) (obj.get("title")), i, 2);
+			tableModel.setValueAt((String) (obj.get("artist")), i, 3);
+			tableModel.setValueAt((String) (obj.get("albumName")), i, 4);
 		}
 	}
 	public JScrollPane getScrollBar() {
@@ -157,28 +168,31 @@ public class SitePanel extends JPanel {
 	}
 	
 	//table model class
-	class ChartModel extends AbstractTableModel {
+	public class ChartModel extends AbstractTableModel {
 		private String[] arrColumnName;
 		private Object[][] chartData;
 		
-		public ChartModel(Music[] musics) {
-			arrColumnName = new String[6];
+		public ChartModel(JSONArray musics) {
+			arrColumnName = new String[5];
 			arrColumnName[0] = "순위";
 			arrColumnName[1] = "이미지";
 			arrColumnName[2] = "곡명";
 			arrColumnName[3] = "가수";
 			arrColumnName[4] = "앨범";
-			arrColumnName[5] = "좋아요";
 			
-			chartData = new Object[100][6];
-			for(int i = 0; i < 100; i++) {
-				chartData[i] = new Object[6];
-				chartData[i][0] = musics[i].getnRank();
-				chartData[i][1] = musics[i].getImage();
-				chartData[i][2] = musics[i].getStrName();
-				chartData[i][3] = musics[i].getStrSinger();
-				chartData[i][4] = musics[i].getStrAlbum();
-				chartData[i][5] = "♥" + musics[i].getnLikes();
+			chartData = new Object[musics.size()][5];
+			for(int i = 0; i < musics.size(); i++) {
+				chartData[i] = new Object[5];
+				JSONObject obj = (JSONObject) musics.get(i);
+				chartData[i][0] = Integer.parseInt((String) (obj.get("rank")));
+				try {
+					chartData[i][1] = new ImageIcon(new URL((String) obj.get("smallImageUrl")));
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+				chartData[i][2] = (String) obj.get("title");
+				chartData[i][3] = (String) obj.get("artist");
+				chartData[i][4] = (String) obj.get("albumName");
 			}
 		}
 		
@@ -187,16 +201,6 @@ public class SitePanel extends JPanel {
 		}
 		public Object[] getMusicData(int index) {
 			return chartData[index];
-		}
-		public void setChartData(Object[][] data) {
-			for(int i = 0; i < 100; i++) {
-				for(int j = 0; j < 6; j++) {
-					setValueAt(data[i][j], i, j);
-				}
-			}
-		}
-		public void setMusicData(Object[] musicData, int index) {
-			for(int i = 0; i < 6; i++) setValueAt(musicData[i], index, i);
 		}
 		@Override
 		public int getColumnCount() {
@@ -220,7 +224,18 @@ public class SitePanel extends JPanel {
 		}
 		@Override
 		public Class<?> getColumnClass(int column) {
-			return getValueAt(0, column).getClass();
+			switch(column) {
+			case 0:
+				return Integer.class;
+			case 1:
+				return ImageIcon.class;
+			case 2:
+			case 3:
+			case 4:
+				return String.class;
+			default:
+				return Object.class;
+			}
 		}
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -239,9 +254,9 @@ public class SitePanel extends JPanel {
 			Object obj = e.getSource();
 			if(obj == tableChart) {
 				JTable table = (JTable) obj;
-				Music music = arrMusic[table.convertRowIndexToModel(table.getSelectedRow())];
+				Object[] music = tableModel.getMusicData(table.convertRowIndexToModel(table.getSelectedRow()));
 				//open community panel
-				System.out.println(music); //for testing purpose only
+				System.out.println(music[0]); //for testing purpose
 			}
 		}
 		@Override
