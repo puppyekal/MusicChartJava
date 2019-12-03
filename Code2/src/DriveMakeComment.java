@@ -13,6 +13,10 @@ public class DriveMakeComment {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setBackground(Color.white);
 
+        CommentUI primary = new CommentUI();
+        frame.getContentPane().add(primary);
+
+
         frame.pack();
         frame.setVisible(true);
     }

@@ -1,5 +1,8 @@
 import org.json.simple.JSONArray;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class AppManger {
     private static AppManger s_instance;
     private int Site_M_B_G;
@@ -7,14 +10,38 @@ public class AppManger {
     private BugsChartParser bugs;
     private GenieChartParser genie;
     private JSONArray[] chartData;
+    private CommentUI pnlComment;
+    private ChartPrimaryPanel pnlChartPrimary;
+    private JPanel primary;
 
-    private AppManger(){
+    public AppManger(){
         Site_M_B_G = 1;
         chartData = new JSONArray[3];
+
         melon = new MelonChartParser();
         bugs = new BugsChartParser();
         genie = new GenieChartParser();
+
     }
+
+    public JPanel getPrimary() {
+        if(primary == null)
+            primary = new JPanel();
+        primary.setPreferredSize(new Dimension(1000,1000));
+        primary.setLayout(null);
+        primary.setVisible(true);
+        return primary;
+    }
+
+    public CommentUI getPnlComment() {
+        return pnlComment;
+    }
+    public ChartPrimaryPanel getPnlChartPrimary() {
+        if(pnlChartPrimary == null)
+            pnlChartPrimary = new ChartPrimaryPanel();
+        return pnlChartPrimary;
+    }
+
 
     public void setSite_M_B_G(int M_B_G){
         Site_M_B_G = M_B_G;

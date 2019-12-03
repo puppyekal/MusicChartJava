@@ -11,7 +11,7 @@ public class CommentUI extends JPanel {
 
     private JPanel pnlMain,pnlCommentField,pnlMusicInfo;
     private JTextField txtComment,txtPassword;
-    private JButton btnRegister,btnDelete;
+    private JButton btnRegister,btnDelete,btnBack;
     private ArrayList<String> arrComment;
     private ArrayList<String> arrPassword;
     private JList listComment;
@@ -59,6 +59,10 @@ public class CommentUI extends JPanel {
         btnDelete.addActionListener(new ButtonListener());
         pnlMain.add(btnDelete);
 
+        btnBack = new JButton("X");
+        btnBack.setBounds(660,0,20,20);
+        pnlMain.add(btnBack);
+
         arrComment = new ArrayList<>();
         arrPassword = new ArrayList<>();
         listComment = new JList();
@@ -104,6 +108,9 @@ public class CommentUI extends JPanel {
         lblStrSinger.setBounds(0,80,160,20);
         lblStrSinger.setHorizontalAlignment(JLabel.CENTER);
         pnlMusicInfo.add(lblStrSinger);
+
+
+
     }//addMusicInfo
 
     private void addList(){
@@ -159,6 +166,9 @@ public class CommentUI extends JPanel {
                 if(txtPassword.getText() == arrPassword.get(listComment.getSelectedIndex())){
                     modelList.removeElementAt(listComment.getSelectedIndex());
                 }
+            }
+            if(obj == btnBack){
+
             }
         }//actionPerfomed
     }//ButtonRegister

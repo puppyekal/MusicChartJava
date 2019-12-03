@@ -1,33 +1,28 @@
-import org.json.simple.JSONArray;
-
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 
 public class ChartPrimaryPanel extends JPanel{
-    private SitePanel pnlsitePanel;
-    private JPanel[] ChartPanel = new JPanel[50];
-    private JButton RefreshBtn, btnSiteBtn_M, btnSiteBtn_B, btnSiteBtn_G, SearchBtn;
-    private JLabel TimeLabel, ChartLabel;
+    private SitePanel pnlSitePanel;
+    private JButton btnRefresh, btnSite_M, btnSite_B, btnSite_G, btnSearch;
+    private JLabel lblTime, lblChart;
     private JComboBox strCombo;
 
     private int Site_M_B_G = 0;
 
-    private ButtonListener ButtonRefresh, ButtonMelon, ButtonBugs, ButtonGenie, ButtonSearch;
+    private ButtonListener  ButtonRefresh, ButtonSearch,
+                            ButtonMelon, ButtonBugs, ButtonGenie;
 
-    private String SearchMusic;
-    private String MelonSite, BugsSite, GenieSite;
+    private String strSearchMusic;
+    private String strMelonSite, strBugsSite, strGenieSite;
 
-    private String[] SearchCategory = {"Name", "Artist"};
+    private String[] strSearchCategory = {"Name", "Artist"};
 
-    private JTextField Searchtxt;
+    private JTextField txtSearch;
 
 
     LocalDateTime current = LocalDateTime.now();
@@ -39,15 +34,19 @@ public class ChartPrimaryPanel extends JPanel{
     //refreshTime
 
     //get/set
-    public String getMelonSite()        {return MelonSite;}
-    public String getSearchMusic()      {return SearchMusic;}
-    public String getBugsSite()         {return BugsSite;}
-    public String getGenieSite()        {return GenieSite;}
+    public String getStrMelonSite()        {return strMelonSite;}
+    public String getStrSearchMusic()      {return strSearchMusic;}
+    public String getStrBugsSite()         {return strBugsSite;}
+    public String getStrGenieSite()        {return strGenieSite;}
 
-    public void setMelonSite(String melonSite)          {MelonSite = melonSite;}
-    public void setSearchMusic(String searchMusic)      {SearchMusic = searchMusic;}
-    public void setBugsSite(String bugsSite)            {BugsSite = bugsSite;}
-    public void setGenieSite(String genieSite)          {GenieSite = genieSite;}
+    public void setStrMelonSite(String strMelonSite)          {
+        this.strMelonSite = strMelonSite;}
+    public void setStrSearchMusic(String strSearchMusic)      {
+        this.strSearchMusic = strSearchMusic;}
+    public void setStrBugsSite(String strBugsSite)            {
+        this.strBugsSite = strBugsSite;}
+    public void setStrGenieSite(String strGenieSite)          {
+        this.strGenieSite = strGenieSite;}
 
     public ChartPrimaryPanel(){
 
@@ -61,80 +60,67 @@ public class ChartPrimaryPanel extends JPanel{
         ButtonGenie = new ButtonListener();
         ButtonSearch = new ButtonListener();
 
-        strCombo = new JComboBox(SearchCategory);
+        strCombo = new JComboBox(strSearchCategory);
         strCombo.setBounds(100, 30, 150,40);
         add(strCombo);
 
-        Searchtxt = new JTextField();
-        Searchtxt.setBounds(250,30,700,40);
-        Searchtxt.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        txtSearch = new JTextField();
+        txtSearch.setBounds(250,30,700,40);
+        txtSearch.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        txtSearch.addKeyListener(new KeyActionListener());
+        add(txtSearch);
 
-        Searchtxt.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                    SearchMusic = Searchtxt.getText();
-                    System.out.println(SearchMusic);
-                    Searchtxt.setText("");
-                    //////////////////////////////////////////////
-                    ///Need code to erase and repaint SitePanel///
-                    //////////////////////////////////////////////
-                }
-            }
-        });//엔터키 입력
-        add(Searchtxt);
+        btnSearch = new JButton("Search");
+        btnSearch.setBounds(950,30,150,40);
+        btnSearch.setForeground(Color.DARK_GRAY);
+        btnSearch.setBackground(Color.lightGray);
+        btnSearch.addActionListener(ButtonRefresh);
+        add(btnSearch);
 
-        SearchBtn = new JButton("Search");
-        SearchBtn.setBounds(950,30,150,40);
-        SearchBtn.setForeground(Color.DARK_GRAY);
-        SearchBtn.setBackground(Color.lightGray);
-        SearchBtn.addActionListener(ButtonRefresh);
-        add(SearchBtn);
-
-        RefreshBtn = new JButton(new ImageIcon("Image/Refresh.png"));
-        RefreshBtn.setBounds(30,30,40,40);
-        RefreshBtn.setForeground(Color.DARK_GRAY);
-        RefreshBtn.setBackground(Color.lightGray);
-        RefreshBtn.addActionListener(ButtonSearch);
-        add(RefreshBtn);
+        btnRefresh = new JButton(new ImageIcon("Image/Refresh.png"));
+        btnRefresh.setBounds(30,30,40,40);
+        btnRefresh.setForeground(Color.DARK_GRAY);
+        btnRefresh.setBackground(Color.lightGray);
+        btnRefresh.addActionListener(ButtonSearch);
+        add(btnRefresh);
 
         LocalDateTime current = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formatted = current.format(formatter);
-        TimeLabel = new JLabel("Renewal time : " + formatted);
+        lblTime = new JLabel("Renewal time : " + formatted);
         System.out.println("Renewal time : " + formatted);
-        TimeLabel.setBounds(800,830,200,40);
-        TimeLabel.setFont(new Font("Verdana", Font.BOLD + Font.PLAIN, 14));
-        TimeLabel.setBackground(Color.lightGray);
-        TimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        TimeLabel.setOpaque(true);
-        add(TimeLabel);
+        lblTime.setBounds(800,830,200,40);
+        lblTime.setFont(new Font("Verdana", Font.BOLD + Font.PLAIN, 14));
+        lblTime.setBackground(Color.lightGray);
+        lblTime.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTime.setOpaque(true);
+        add(lblTime);
 
-        btnSiteBtn_M = new JButton(new ImageIcon("Image/logo_Melon.png"));
-        btnSiteBtn_M.setBounds(100,100,150,40);
-        btnSiteBtn_M.setBackground(Color.WHITE);
-        btnSiteBtn_M.addActionListener(ButtonMelon);
-        add(btnSiteBtn_M);
+        btnSite_M = new JButton(new ImageIcon("Image/logo_Melon.png"));
+        btnSite_M.setBounds(100,100,150,40);
+        btnSite_M.setBackground(Color.WHITE);
+        btnSite_M.addActionListener(ButtonMelon);
+        add(btnSite_M);
 
-        btnSiteBtn_B = new JButton(new ImageIcon("Image/logo_Bugs.png"));
-        btnSiteBtn_B.setBounds(250,100,150,40);
-        btnSiteBtn_B.setBackground(Color.WHITE);
-        btnSiteBtn_B.addActionListener(ButtonBugs);
-        add(btnSiteBtn_B);
+        btnSite_B = new JButton(new ImageIcon("Image/logo_Bugs.png"));
+        btnSite_B.setBounds(250,100,150,40);
+        btnSite_B.setBackground(Color.WHITE);
+        btnSite_B.addActionListener(ButtonBugs);
+        add(btnSite_B);
 
-        btnSiteBtn_G = new JButton(new ImageIcon("Image/logo_Genie.png"));
-        btnSiteBtn_G.setBounds(400,100,150,40);
-        btnSiteBtn_G.setBackground(Color.WHITE);
-        btnSiteBtn_G.addActionListener(ButtonGenie);
-        add(btnSiteBtn_G);
+        btnSite_G = new JButton(new ImageIcon("Image/logo_Genie.png"));
+        btnSite_G.setBounds(400,100,150,40);
+        btnSite_G.setBackground(Color.WHITE);
+        btnSite_G.addActionListener(ButtonGenie);
+        add(btnSite_G);
 
 
-        pnlsitePanel = new SitePanel(AppManger.getS_instance().getParser());
-        pnlsitePanel.setBounds(100,140,1000,660);
+        pnlSitePanel = new SitePanel(AppManger.getS_instance().getParser());
+        pnlSitePanel.setBounds(100,140,1000,660);
         LineBorder SiteBorder = new LineBorder(Color.BLACK,3);
-        pnlsitePanel.setBorder(SiteBorder);
-        pnlsitePanel.setLayout(null);
-        add(pnlsitePanel);
+        pnlSitePanel.setBorder(SiteBorder);
+        pnlSitePanel.setLayout(null);
+        add(pnlSitePanel);
 
     }//constructor
 
@@ -144,59 +130,80 @@ public class ChartPrimaryPanel extends JPanel{
         @Override
         public void actionPerformed(ActionEvent e) {
             Object obj = e.getSource();
-            if (obj == RefreshBtn) {
+            if (obj == btnRefresh) {
                 current = LocalDateTime.now();
                 formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
                 switch (AppManger.getS_instance().getSite_M_B_G()){
                     case 0:
                         formatted_Melon = current.format(formatter);
-                        TimeLabel.setText("Renewal time : " + formatted_Melon);
+                        lblTime.setText("Renewal time : " + formatted_Melon);
                         AppManger.getS_instance().setSite_M_B_G(1);
                         AppManger.getS_instance().DataPassing();
                         break;
                     case 1:
                         formatted_Bugs = current.format(formatter);
-                        TimeLabel.setText("Renewal time : " + formatted_Bugs);
+                        lblTime.setText("Renewal time : " + formatted_Bugs);
                         AppManger.getS_instance().setSite_M_B_G(2);
                         AppManger.getS_instance().DataPassing();
                         break;
                     case 2:
                         formatted_Genie = current.format(formatter);
-                        TimeLabel.setText("Renewal time : " + formatted_Genie);
+                        lblTime.setText("Renewal time : " + formatted_Genie);
                         AppManger.getS_instance().setSite_M_B_G(3);
                         AppManger.getS_instance().DataPassing();
                         break;
                 }
             }//refresh 새로 파싱해옴
-            if (obj == btnSiteBtn_M) {
+            if (obj == btnSite_M) {
                 AppManger.getS_instance().setSite_M_B_G(1);
                 AppManger.getS_instance().DataPassing();
                 System.out.println("Melon");
-                pnlsitePanel.dataChange(AppManger.getS_instance().getParser());
-                TimeLabel.setText("Renewal time : " + formatted_Melon);
+                pnlSitePanel.dataChange(AppManger.getS_instance().getParser());
+                lblTime.setText("Renewal time : " + formatted_Melon);
+                txtSearch.setText("");
+                pnlSitePanel.filter(null,2);
             }
-            if (obj == btnSiteBtn_B) {
+            if (obj == btnSite_B) {
                 AppManger.getS_instance().setSite_M_B_G(2);
                 AppManger.getS_instance().DataPassing();
                 System.out.println("Bugs");
-                pnlsitePanel.dataChange(AppManger.getS_instance().getParser());
-                TimeLabel.setText("Renewal time : " + formatted_Bugs);
+                pnlSitePanel.dataChange(AppManger.getS_instance().getParser());
+                lblTime.setText("Renewal time : " + formatted_Bugs);
+                txtSearch.setText("");
+                pnlSitePanel.filter(null,2);
             }
-            if (obj == btnSiteBtn_G) {
+            if (obj == btnSite_G) {
                 AppManger.getS_instance().setSite_M_B_G(3);
                 AppManger.getS_instance().DataPassing();
                 System.out.println("Genie");
-                pnlsitePanel.dataChange(AppManger.getS_instance().getParser());
-                TimeLabel.setText("Renewal time : " + formatted_Genie);
+                pnlSitePanel.dataChange(AppManger.getS_instance().getParser());
+                lblTime.setText("Renewal time : " + formatted_Genie);
+                txtSearch.setText("");
+                pnlSitePanel.filter(null,2);
             }
-            if (obj == SearchBtn) {
-                SearchMusic = Searchtxt.getText();
-                System.out.println(SearchMusic);
-                Searchtxt.setText("");
-                //////////////////////////////////////////////
-                ///Need code to erase and repaint SitePanel///
-                //////////////////////////////////////////////
-            }//Search
         }
     }//ButtonListener
+
+    private class KeyActionListener implements KeyListener{
+
+        @Override
+        public void keyTyped(KeyEvent e) { }
+
+        @Override
+        public void keyPressed(KeyEvent e) { }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            Object obj = e.getSource();
+
+            if(obj == txtSearch){
+                //strSearchCategory = {"Name", "Artist"};
+                if(0 == strCombo.getSelectedIndex())
+                    pnlSitePanel.filter(txtSearch.getText(),2);
+                if(1 == strCombo.getSelectedIndex())
+                    pnlSitePanel.filter(txtSearch.getText(),3);
+            }
+        }//KeyReleased
+
+    }//KeyListener
 }
