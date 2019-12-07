@@ -281,8 +281,8 @@ public class SitePanel extends JPanel {
 				
 				//for testing purpose only
 				Object[] music = tableModel.getMusicData(table.convertRowIndexToModel(table.getSelectedRow()));
-				System.out.println(music[2]);
-
+				System.out.println(music[2] + music[0].toString());
+				AppManager.getS_instance().PopUpCommentUI(Integer.parseInt(music[0].toString()));
 			}
 		}
 		@Override

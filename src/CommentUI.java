@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +14,10 @@ public class CommentUI extends JPanel {
     private ArrayList<String> arrPassword;
     private JList listComment;
     private DefaultListModel modelList;
-    private String strSelectPassword;
+    private int nRank;
+    private String strTitle,strArtist,strAlbum,strReadTitle;
+    private JLabel lblStrTitle,lblStrArtist;
+    private JLabel lblTitle,lblArtist;
 
     public CommentUI(){
         setPreferredSize(new Dimension(1000,1000));
@@ -61,55 +62,49 @@ public class CommentUI extends JPanel {
 
         btnBack = new JButton("X");
         btnBack.setBounds(660,0,20,20);
+        btnBack.addActionListener(new ButtonListener());
         pnlMain.add(btnBack);
+
+        lblTitle = new JLabel();
+        lblTitle.setBounds(0,40,160,30);
+        lblTitle.setHorizontalAlignment(JLabel.CENTER);
+        pnlMusicInfo.add(lblTitle);
+
+        lblArtist = new JLabel();
+        lblArtist.setBounds(0,110,160,30);
+        lblArtist.setHorizontalAlignment(JLabel.CENTER);
+        pnlMusicInfo.add(lblArtist);
+
+        Font fnt1 = new Font("±¼¸²",Font.PLAIN,20);
+
+        lblStrArtist = new JLabel("Artist");
+        lblStrArtist.setFont(fnt1);
+        lblStrArtist.setBounds(0,80,160,20);
+        lblStrArtist.setHorizontalAlignment(JLabel.CENTER);
+        pnlMusicInfo.add(lblStrArtist);
+
+        lblStrTitle = new JLabel("Title");
+        lblStrTitle.setFont(fnt1);
+        lblStrTitle.setBounds(0,10,160,20);
+        lblStrTitle.setHorizontalAlignment(JLabel.CENTER);
+        pnlMusicInfo.add(lblStrTitle);
 
         arrComment = new ArrayList<>();
         arrPassword = new ArrayList<>();
         listComment = new JList();
 
         modelList = new DefaultListModel();
-        readComment();
-        addMusicInfo();
-        addList();
     }//Constructor
 
-    private void addMusicInfo(/*Music clsMusicInfo*/){
-        /*
-        strSinger = clsMusicInfo.getStrSinger();
-        strTitle = clsMusicInfo.getStrName();
-        strAlbumTitle = clsMusicInfo.getStrAlbum();
-        */
-        JLabel lblTitle,lblSinger;
-        Font fnt2 = new Font("±¼¸²",Font.BOLD,30);
+    private void addMusicInfo(){
 
-        lblTitle = new JLabel("»ß»ß"/*clsMusicInfo.getStrName()*/);
-        lblTitle.setFont(fnt2);
-        lblTitle.setBounds(0,40,160,30);
-        lblTitle.setHorizontalAlignment(JLabel.CENTER);
-        pnlMusicInfo.add(lblTitle);
+        lblTitle.setText(strTitle);
+        lblTitle.setFont(new Font("±¼¸²",Font.BOLD,160 / strTitle.length()));
+        lblTitle.setHorizontalTextPosition(SwingConstants.CENTER);
 
-        lblSinger = new JLabel("IU"/*clsMusicInfo.getStrSinger()*/);
-        lblSinger.setFont(fnt2);
-        lblSinger.setBounds(0,110,160,30);
-        lblSinger.setHorizontalAlignment(JLabel.CENTER);
-        pnlMusicInfo.add(lblSinger);
+        lblArtist.setText(strArtist);
+        lblArtist.setFont(new Font("±¼¸²",Font.BOLD,160 / strArtist.length()));
         //imgAlbumImage = clsMusicInfo.getImage();
-
-        Font fnt1 = new Font("±¼¸²",Font.PLAIN,20);
-
-        JLabel lblStrTitle = new JLabel("Title");
-        lblStrTitle.setFont(fnt1);
-        lblStrTitle.setBounds(0,10,160,20);
-        lblStrTitle.setHorizontalAlignment(JLabel.CENTER);
-        pnlMusicInfo.add(lblStrTitle);
-
-        JLabel lblStrSinger = new JLabel("Singer");
-        lblStrSinger.setFont(fnt1);
-        lblStrSinger.setBounds(0,80,160,20);
-        lblStrSinger.setHorizontalAlignment(JLabel.CENTER);
-        pnlMusicInfo.add(lblStrSinger);
-
-
 
     }//addMusicInfo
 
@@ -122,12 +117,30 @@ public class CommentUI extends JPanel {
         pnlCommentField.add(listComment);
     }
 
+    public void reNewalInfo(int rank){
+        nRank = rank;
+        this.setVisible(true);
+        strTitle = AppManager.getS_instance().getParser().getTitle(rank);
+        strArtist = AppManager.getS_instance().getParser().getArtistName(rank);
+        strAlbum = AppManager.getS_instance().getParser().getAlbumName(rank);
 
-    private void readComment(/*Music clsMusicInfo*/){
+        strReadTitle = strTitle;
+        strReadTitle = strReadTitle.replace("\'", "");
+        if (strReadTitle.indexOf("(") != -1)
+            strReadTitle = strReadTitle.substring(0, strReadTitle.indexOf("("));
+        strReadTitle = strReadTitle.replace(" ", "");
+        strReadTitle = strReadTitle.replace("\'", "");
+
+        readComment();
+        addList();
+        addMusicInfo();
+    }
+
+    private void readComment(){
         File file;
-        //file = new File("comments\\" + clsMusicInfo.getStrName()+ ".txt");
+        System.out.println("Read " + strTitle + ".txt File");
+        file = new File("comments\\" + strReadTitle + ".txt");
         try {
-            file = new File("comments\\ºñµµ ¿À°í ±×·¡¼­.txt");
             FileReader fr = new FileReader(file);
             BufferedReader inFiles = new BufferedReader(fr);
             String strline = "";
@@ -142,12 +155,53 @@ public class CommentUI extends JPanel {
 
     }//readComment
 
+    private void removeAtTxt(int index){
+        System.out.println(index);
+        File file = new File("comments\\" + strReadTitle + ".txt");
+        ArrayList<String> dummy = new ArrayList<String>();
+        try{
+            FileReader fr = new FileReader(file);
+            BufferedReader inFile = new BufferedReader(fr);
+            for(int i = 0 ; i < index * 2 ; i++){
+                dummy.add(inFile.readLine() + "\r");
+            }
+            inFile.readLine();
+            inFile.readLine();
+            String strTemp;
+            while( (strTemp = inFile.readLine()) != null){
+                dummy.add(strTemp + "\r");
+            }
+            FileWriter fw = new FileWriter(file,false);
+            for(String str : dummy){
+                fw.write(str);
+            }
+            fw.flush();
+
+            fw.close();
+            fr.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void clearAll(){
+        txtPassword.setText("");
+        txtComment.setText("");
+        lblArtist.setText("");
+        lblTitle.setText("");
+
+        modelList.clear();
+        arrComment.clear();
+        arrPassword.clear();
+    }
+
     private class ButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             Object obj = e.getSource();
             if(obj == btnRegister){
-                File file = new File("comments\\" + "ºñµµ ¿À°í ±×·¡¼­" + ".txt");
+                File file = new File("comments\\" + AppManager.getS_instance().getParser().getTitle(nRank) + ".txt");
                 try {
                     FileWriter fw = new FileWriter(file,true);
                     fw.write(txtComment.getText() + "\r");
@@ -155,6 +209,10 @@ public class CommentUI extends JPanel {
                     fw.flush();
                     fw.close();
                     modelList.addElement(txtComment.getText());
+
+                    arrComment.add(txtComment.getText());
+                    arrPassword.add(txtPassword.getText());
+
                     txtComment.setText("");
                     txtPassword.setText("");
                 } catch (IOException ex) {
@@ -163,17 +221,22 @@ public class CommentUI extends JPanel {
 
             }//obj == btnRegister
             if(obj == btnDelete){
-                if(txtPassword.getText() == arrPassword.get(listComment.getSelectedIndex())){
+                if(Integer.parseInt(txtPassword.getText()) == Integer.parseInt(arrPassword.get(listComment.getSelectedIndex()))){
+                    System.out.println("Same Password! At : " + String.valueOf(listComment.getSelectedIndex()));
+                    arrPassword.remove(listComment.getSelectedIndex());
+                    arrComment.remove(listComment.getSelectedIndex());
+                    removeAtTxt(listComment.getSelectedIndex());
                     modelList.removeElementAt(listComment.getSelectedIndex());
                 }
+                txtPassword.setText("");
             }
             if(obj == btnBack){
-
+                clearAll();
+                AppManager.getS_instance().BackToChartPrimaryPanel();
+                System.out.println("Back To ChartPrimary");
             }
         }//actionPerfomed
     }//ButtonRegister
 
 }//CommentUI
-
-
 

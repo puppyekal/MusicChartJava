@@ -10,12 +10,13 @@ public class AppManager {
     private BugsChartParser bugs;
     private GenieChartParser genie;
     private JSONArray[] chartData;
-    private CommentUI pnlComment;
+    private CommentUI pnlCommentUI;
     private ChartPrimaryPanel pnlChartPrimary;
+    private JPanel primaryPanel;
 
     private AppManager(){
     	s_instance = this;
-    	
+
         Site_M_B_G = 1;
         chartData = new JSONArray[3];
         chartData[0] = new JSONArray();
@@ -25,22 +26,33 @@ public class AppManager {
         melon = new MelonChartParser();
         bugs = new BugsChartParser();
         genie = new GenieChartParser();
-        
-        pnlChartPrimary = new ChartPrimaryPanel();
+
     }
-    
-    public CommentUI getPnlComment() {
-        return pnlComment;
+
+    public JPanel getPrimaryPanel(){
+        if(primaryPanel == null) {
+            primaryPanel = new JPanel();
+        }
+        return primaryPanel;
+    }
+
+    public CommentUI getPnlCommentUI() {
+        return pnlCommentUI;
     }
     public ChartPrimaryPanel getPnlChartPrimary() {
+        if(pnlChartPrimary == null){
+            pnlChartPrimary = new ChartPrimaryPanel();
+        }
         return pnlChartPrimary;
     }
+
     public void setSite_M_B_G(int M_B_G){
         Site_M_B_G = M_B_G;
     }
     public int getSite_M_B_G() {
         return Site_M_B_G;
     }
+
     public MelonChartParser getMelonChartParser() {
 		return melon;
 	}
@@ -50,6 +62,7 @@ public class AppManager {
 	public GenieChartParser getGenieChartParser() {
 		return genie;
 	}
+
 	public MusicChartParser getParser() {
         switch (Site_M_B_G) {
             case 1:
@@ -105,10 +118,36 @@ public class AppManager {
     		throw new IndexOutOfBoundsException("the length of chartData is 3");
     	}
     }
+
     public JSONArray getDisplayedJSONArray() {
         return chartData[Site_M_B_G - 1];
     }
-    
+
+    public void addToPrimaryPanel(JPanel pnlAdd){
+        if(primaryPanel == null){
+            primaryPanel = new JPanel();
+            primaryPanel.setVisible(true);
+            primaryPanel.setLayout(null);
+        }
+        pnlAdd.setVisible(true);
+        primaryPanel.add(pnlAdd);
+    }
+
+    public void PopUpCommentUI(int rank){
+        if(pnlCommentUI == null) {
+            pnlCommentUI = new CommentUI();
+            addToPrimaryPanel(pnlCommentUI);
+        }
+        pnlCommentUI.reNewalInfo(rank);
+        pnlCommentUI.setVisible(true);
+        pnlChartPrimary.setVisible(false);
+    }
+
+    public void BackToChartPrimaryPanel(){
+        pnlCommentUI.setVisible(false);
+        pnlChartPrimary.setVisible(true);
+    }
+
     public static AppManager getS_instance() {
         if(s_instance == null) s_instance = new AppManager();
         return s_instance;
