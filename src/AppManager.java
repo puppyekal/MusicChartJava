@@ -1,4 +1,5 @@
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,10 +19,10 @@ public class AppManager {
     	s_instance = this;
 
         Site_M_B_G = 1;
-        chartData = new JSONArray[3];
-        chartData[0] = new JSONArray();
+        chartData = new JSONArray[4];
         chartData[1] = new JSONArray();
         chartData[2] = new JSONArray();
+        chartData[3] = new JSONArray();
 
         melon = new MelonChartParser();
         bugs = new BugsChartParser();
@@ -31,7 +32,17 @@ public class AppManager {
 
     public JPanel getPrimaryPanel(){
         if(primaryPanel == null) {
-            primaryPanel = new JPanel();
+            primaryPanel = new JPanel(){
+                public void paintComponent(Graphics g){
+                    ImageIcon icon = new ImageIcon("Image\\background.jpg");
+                    g.drawImage(icon.getImage(),0,0,null);
+                    setOpaque(false);
+                    super.paintComponent(g);
+                }
+            };
+            primaryPanel.setLayout(null);
+            primaryPanel.setPreferredSize(new Dimension(1280,960));
+            primaryPanel.setBackground(Color.BLACK);
         }
         return primaryPanel;
     }
@@ -42,6 +53,8 @@ public class AppManager {
     public ChartPrimaryPanel getPnlChartPrimary() {
         if(pnlChartPrimary == null){
             pnlChartPrimary = new ChartPrimaryPanel();
+            pnlChartPrimary.setVisible(true);
+            pnlChartPrimary.setLayout(null);
         }
         return pnlChartPrimary;
     }
@@ -108,19 +121,32 @@ public class AppManager {
     }
     public JSONArray getJSONArray(int index) {
     	switch(index) {
-    	case 0:
-    		return chartData[0];
     	case 1:
     		return chartData[1];
     	case 2:
     		return chartData[2];
+    	case 3:
+    		return chartData[3];
     	default:
     		throw new IndexOutOfBoundsException("the length of chartData is 3");
     	}
     }
 
+    public JSONArray getJSONArray() {
+        switch(Site_M_B_G) {
+            case 0:
+                return chartData[1];
+            case 1:
+                return chartData[2];
+            case 2:
+                return chartData[3];
+            default:
+                throw new IndexOutOfBoundsException("the length of chartData is 3");
+        }
+    }
+
     public JSONArray getDisplayedJSONArray() {
-        return chartData[Site_M_B_G - 1];
+        return chartData[Site_M_B_G];
     }
 
     public void addToPrimaryPanel(JPanel pnlAdd){
@@ -136,7 +162,7 @@ public class AppManager {
     public void PopUpCommentUI(int rank){
         if(pnlCommentUI == null) {
             pnlCommentUI = new CommentUI();
-            addToPrimaryPanel(pnlCommentUI);
+            primaryPanel.add(pnlCommentUI);
         }
         pnlCommentUI.reNewalInfo(rank);
         pnlCommentUI.setVisible(true);
@@ -144,6 +170,7 @@ public class AppManager {
     }
 
     public void BackToChartPrimaryPanel(){
+        primaryPanel.repaint();
         pnlCommentUI.setVisible(false);
         pnlChartPrimary.setVisible(true);
     }

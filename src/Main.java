@@ -8,7 +8,7 @@ public class Main {
         new MakeComment();
 
         frame.getContentPane().add(AppManager.getS_instance().getPrimaryPanel());
-        AppManager.getS_instance().getPrimaryPanel().add(AppManager.getS_instance().getPnlChartPrimary());
+        AppManager.getS_instance().addToPrimaryPanel(AppManager.getS_instance().getPnlChartPrimary());
 
         frame.pack();
         frame.setVisible(true);

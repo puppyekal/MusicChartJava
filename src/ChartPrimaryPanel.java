@@ -48,8 +48,8 @@ public class ChartPrimaryPanel extends JPanel{
 
     public ChartPrimaryPanel(){
 
-        setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(1200,900));
+        setBackground(new Color(255, 255, 255, 0));
+        setBounds(1,0,1278,960);
         setLayout(null);
 
         ButtonRefresh = new ButtonListener();
@@ -58,24 +58,6 @@ public class ChartPrimaryPanel extends JPanel{
         ButtonGenie = new ButtonListener();
         ButtonSearch = new ButtonListener();
 
-        strCombo = new JComboBox<String>(strSearchCategory);
-        strCombo.setBounds(100, 30, 150,40);
-        strCombo.setEditable(false);
-        add(strCombo);
-
-        txtSearch = new JTextField();
-        txtSearch.setBounds(250,30,700,40);
-        txtSearch.setFont(new Font("SansSerif", Font.PLAIN, 25));
-        txtSearch.addKeyListener(new KeyActionListener());
-        add(txtSearch);
-
-        btnSearch = new JButton("Search");
-        btnSearch.setBounds(950,30,150,40);
-        btnSearch.setForeground(Color.DARK_GRAY);
-        btnSearch.setBackground(Color.lightGray);
-        btnSearch.addActionListener(ButtonRefresh);
-        add(btnSearch);
-
         btnRefresh = new JButton(new ImageIcon("Image/Refresh.png"));
         btnRefresh.setBounds(30,30,40,40);
         btnRefresh.setForeground(Color.DARK_GRAY);
@@ -83,17 +65,23 @@ public class ChartPrimaryPanel extends JPanel{
         btnRefresh.addActionListener(ButtonSearch);
         add(btnRefresh);
 
-        LocalDateTime current = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String formatted = current.format(formatter);
-        lblTime = new JLabel("Renewal time : " + formatted);
-        System.out.println("Renewal time : " + formatted);
-        lblTime.setBounds(800,830,200,40);
-        lblTime.setFont(new Font("Verdana", Font.BOLD + Font.PLAIN, 14));
-        lblTime.setBackground(Color.lightGray);
-        lblTime.setHorizontalAlignment(SwingConstants.CENTER);
-        lblTime.setOpaque(true);
-        add(lblTime);
+        strCombo = new JComboBox<String>(strSearchCategory);
+        strCombo.setBounds(100, 30, 150,40);
+        strCombo.setEditable(false);
+        add(strCombo);
+
+        txtSearch = new JTextField();
+        txtSearch.setBounds(250,30,840,40);
+        txtSearch.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        txtSearch.addKeyListener(new KeyActionListener());
+        add(txtSearch);
+
+        btnSearch = new JButton("Search");
+        btnSearch.setBounds(1090,30,150,40);
+        btnSearch.setForeground(Color.DARK_GRAY);
+        btnSearch.setBackground(Color.lightGray);
+        btnSearch.addActionListener(ButtonRefresh);
+        add(btnSearch);
 
         btnSite_M = new JButton(new ImageIcon("Image/logo_Melon.png"));
         btnSite_M.setBounds(100,100,150,40);
@@ -113,13 +101,24 @@ public class ChartPrimaryPanel extends JPanel{
         btnSite_G.addActionListener(ButtonGenie);
         add(btnSite_G);
 
-
         pnlSitePanel = new SitePanel();
-        pnlSitePanel.setBounds(100,140,1000,660);
+        pnlSitePanel.setBounds(100,140,1080,700);
         LineBorder SiteBorder = new LineBorder(Color.BLACK,3);
         pnlSitePanel.setBorder(SiteBorder);
         pnlSitePanel.setLayout(null);
         add(pnlSitePanel);
+
+        LocalDateTime current = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String formatted = current.format(formatter);
+        lblTime = new JLabel("Renewal time : " + formatted);
+        System.out.println("Renewal time : " + formatted);
+        lblTime.setBounds(900,870,200,40);
+        lblTime.setFont(new Font("Verdana", Font.BOLD + Font.PLAIN, 14));
+        lblTime.setBackground(Color.lightGray);
+        lblTime.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTime.setOpaque(true);
+        add(lblTime);
 
     }//constructor
 

@@ -80,7 +80,7 @@ public class BugsChartParser extends MusicChartParser {
 
 	public BugsChartParser() {
 		songCount = 0;
-		chartList = AppManager.getS_instance().getJSONArray(1);
+		chartList = AppManager.getS_instance().getJSONArray(2);
 		songDetailInfo = null;
 		url = null;
 	}

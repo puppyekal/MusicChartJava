@@ -81,7 +81,7 @@ public class GenieChartParser extends MusicChartParser {
 	
 	public GenieChartParser() {
 		songCount = 0;
-		chartList = AppManager.getS_instance().getJSONArray(2);
+		chartList = AppManager.getS_instance().getJSONArray(3);
 		songDetailInfo = null;
 		url = null;
 	}

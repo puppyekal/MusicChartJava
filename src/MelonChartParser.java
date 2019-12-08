@@ -82,7 +82,7 @@ public class MelonChartParser extends MusicChartParser {
 	
 	public MelonChartParser() {
 		songCount = 0;
-		chartList = AppManager.getS_instance().getJSONArray(0);
+		chartList = AppManager.getS_instance().getJSONArray(1);
 		songDetailInfo = null;
 		url = null;
 	}

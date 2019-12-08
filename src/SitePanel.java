@@ -44,9 +44,7 @@ public class SitePanel extends JPanel {
 	public SitePanel() {
 		strChartName = "Melon";
 		clkListener = new ClickListener();
-		
-		setPreferredSize(new Dimension(1000, 660));
-		setBounds(100, 140, 1000, 660);
+
 		setBackground(LBLBACKGROUND);
 		setLayout(null);
 		setFont(new Font("맑은 고딕", Font.BOLD, 64));
@@ -54,9 +52,9 @@ public class SitePanel extends JPanel {
 		lblTitle = new JLabel(strChartName + " TOP 100");
 		lblTitle.setBackground(Color.white);
 		lblTitle.setForeground(TITLECOLOR);
-		lblTitle.setBounds(80, 30, 840, 80);
-		lblTitle.setFont(new Font("맑은 고딕", Font.BOLD, 48));
-		lblTitle.setHorizontalAlignment(SwingConstants.LEFT);
+		lblTitle.setBounds(80, 30, 920, 80);
+		lblTitle.setFont(new Font("배달의민족 도현", Font.BOLD, 48));
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setVerticalAlignment(SwingConstants.CENTER);
 		add(lblTitle);
 		
@@ -84,7 +82,7 @@ public class SitePanel extends JPanel {
 		add(tableChart);
 		
 		scrollBar = new JScrollPane(tableChart, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollBar.setBounds(80, 130, 840, 500);
+		scrollBar.setBounds(40, 130, 1000, 540);
 		add(scrollBar);
 	} //constructor
 	
@@ -274,11 +272,7 @@ public class SitePanel extends JPanel {
 			Object obj = e.getSource();
 			if(obj == tableChart) {
 				JTable table = (JTable) obj;
-				
-				//OPEN COMMUNITY HERE
-				//use table.convertRowIndexToModel(table.getSelectedRow()) to get index of selected music
-				//you get actual position regardless of active filter
-				
+
 				//for testing purpose only
 				Object[] music = tableModel.getMusicData(table.convertRowIndexToModel(table.getSelectedRow()));
 				System.out.println(music[2] + music[0].toString());

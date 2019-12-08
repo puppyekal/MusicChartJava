@@ -1,8 +1,14 @@
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class CommentUI extends JPanel {
@@ -17,77 +23,88 @@ public class CommentUI extends JPanel {
     private int nRank;
     private String strTitle,strArtist,strAlbum,strReadTitle;
     private JLabel lblStrTitle,lblStrArtist;
-    private JLabel lblTitle,lblArtist;
+    private JLabel lblTitle,lblArtist,lblImage;
+    private ImageIcon imgAlbum;
+
 
     public CommentUI(){
-        setPreferredSize(new Dimension(1000,1000));
-        setBackground(new Color(0,0,0,30));
+        setPreferredSize(new Dimension(1024,768));
+        setBackground(new Color(0,0,0,25));
         setLayout(null);
 
-        pnlMain = new JPanel();
-        pnlMain.setBackground(Color.white);
-        pnlMain.setBounds(150,250,700,500);
-        pnlMain.setLayout(null);
-        add(pnlMain);
-
-        pnlCommentField = new JPanel();
-        pnlCommentField.setBackground(Color.white);
-        pnlCommentField.setBounds(20,20,480,400);
-        pnlCommentField.setLayout(null);
-        pnlMain.add(pnlCommentField);
+        setBounds(128,96,1024,768);
+        setLayout(null);
 
         pnlMusicInfo = new JPanel();
         pnlMusicInfo.setBackground(new Color(200,200,200));
-        pnlMusicInfo.setBounds(520,20,160,370);
+        pnlMusicInfo.setBounds(32,32,960,80);
         pnlMusicInfo.setLayout(null);
-        pnlMain.add(pnlMusicInfo);
+        add(pnlMusicInfo);
+
+        pnlCommentField = new JPanel();
+        pnlCommentField.setBackground(Color.white);
+        pnlCommentField.setBounds(32,144,960,520);
+        pnlCommentField.setLayout(null);
+        add(pnlCommentField);
 
         txtComment = new JTextField();
-        txtComment.setBounds(20,440,480,40);
-        pnlMain.add(txtComment);
+        txtComment.setBounds(32,696,800,40);
+        add(txtComment);
 
         txtPassword = new JTextField();
-        txtPassword.setBounds(520,400,100,20);
-        pnlMain.add(txtPassword);
+        txtPassword.setBounds(832,676,80,20);
+        add(txtPassword);
 
         btnRegister = new JButton("Register");
-        btnRegister.setBounds(520,440,160,40);
+        btnRegister.setBounds(832,696,160,40);
+        btnRegister.setBackground(Color.WHITE);
         btnRegister.addActionListener(new ButtonListener());
-        pnlMain.add(btnRegister);
+        add(btnRegister);
 
         btnDelete = new JButton("Delete");
-        btnDelete.setBounds(620,400,60,20);
+        btnDelete.setBounds(912,676,80,20);
+        btnDelete.setBackground(Color.WHITE);
+        btnDelete.setFont(new Font("한강남산체 M",Font.PLAIN,13));
         btnDelete.addActionListener(new ButtonListener());
-        pnlMain.add(btnDelete);
+        add(btnDelete);
 
-        btnBack = new JButton("X");
-        btnBack.setBounds(660,0,20,20);
+        btnBack = new JButton("Back");
+        btnBack.setBounds(964,0,60,30);
+        btnBack.setFont(new Font("배달의민족 을지로체 TTF",Font.PLAIN,12));
+        btnBack.setBackground(Color.WHITE);
         btnBack.addActionListener(new ButtonListener());
-        pnlMain.add(btnBack);
+        add(btnBack);
+
 
         lblTitle = new JLabel();
-        lblTitle.setBounds(0,40,160,30);
-        lblTitle.setHorizontalAlignment(JLabel.CENTER);
+        lblTitle.setBounds(110,10,400,60);
+        lblTitle.setHorizontalAlignment(JLabel.LEFT);
+        lblTitle.setFont(new Font("서울남산체 B",Font.PLAIN,40));
         pnlMusicInfo.add(lblTitle);
 
         lblArtist = new JLabel();
-        lblArtist.setBounds(0,110,160,30);
-        lblArtist.setHorizontalAlignment(JLabel.CENTER);
+        lblArtist.setBounds(670,10,220,60);
+        lblArtist.setFont(new Font("서울남산체 B",Font.PLAIN,40));
+        lblArtist.setHorizontalAlignment(JLabel.LEFT);
         pnlMusicInfo.add(lblArtist);
 
-        Font fnt1 = new Font("굴림",Font.PLAIN,20);
+        Font fnt1 = new Font("한강남산체 M",Font.BOLD,30);
 
-        lblStrArtist = new JLabel("Artist");
+        lblStrArtist = new JLabel("Artist : ");
         lblStrArtist.setFont(fnt1);
-        lblStrArtist.setBounds(0,80,160,20);
+        lblStrArtist.setBounds(510,10,160,60);
         lblStrArtist.setHorizontalAlignment(JLabel.CENTER);
         pnlMusicInfo.add(lblStrArtist);
 
-        lblStrTitle = new JLabel("Title");
+        lblStrTitle = new JLabel("Title : ");
         lblStrTitle.setFont(fnt1);
-        lblStrTitle.setBounds(0,10,160,20);
-        lblStrTitle.setHorizontalAlignment(JLabel.CENTER);
+        lblStrTitle.setBounds(10,10,100,60);
         pnlMusicInfo.add(lblStrTitle);
+
+        imgAlbum = new ImageIcon();
+        lblImage = new JLabel(imgAlbum);
+        lblImage.setBounds(900,10,50,50);
+        pnlMusicInfo.add(lblImage);
 
         arrComment = new ArrayList<>();
         arrPassword = new ArrayList<>();
@@ -97,14 +114,19 @@ public class CommentUI extends JPanel {
     }//Constructor
 
     private void addMusicInfo(){
+        String strRefinedTitle = strTitle;
+        if(strRefinedTitle.indexOf("(") != -1){
+            strRefinedTitle = strRefinedTitle.substring(0,strRefinedTitle.indexOf("("));
+        }
+        lblTitle.setText(strRefinedTitle);
 
-        lblTitle.setText(strTitle);
-        lblTitle.setFont(new Font("굴림",Font.BOLD,160 / strTitle.length()));
-        lblTitle.setHorizontalTextPosition(SwingConstants.CENTER);
+        String strRefinedArtist = strArtist;
+        if(strRefinedArtist.indexOf("(") != -1){
+            strRefinedArtist = strRefinedArtist.substring(0,strRefinedArtist.indexOf("("));
+        }
+        lblArtist.setText(strRefinedArtist);
 
-        lblArtist.setText(strArtist);
-        lblArtist.setFont(new Font("굴림",Font.BOLD,160 / strArtist.length()));
-        //imgAlbumImage = clsMusicInfo.getImage();
+
 
     }//addMusicInfo
 
@@ -113,7 +135,8 @@ public class CommentUI extends JPanel {
             modelList.addElement(ptr);
         }
         listComment.setModel(modelList);
-        listComment.setBounds(0,0,480,400);
+        listComment.setFont(new Font("서울한강체 M",Font.PLAIN,20));
+        listComment.setBounds(0,0,960,400);
         pnlCommentField.add(listComment);
     }
 
@@ -123,6 +146,8 @@ public class CommentUI extends JPanel {
         strTitle = AppManager.getS_instance().getParser().getTitle(rank);
         strArtist = AppManager.getS_instance().getParser().getArtistName(rank);
         strAlbum = AppManager.getS_instance().getParser().getAlbumName(rank);
+
+
 
         strReadTitle = strTitle;
         strReadTitle = strReadTitle.replace("\'", "");
@@ -200,18 +225,24 @@ public class CommentUI extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             Object obj = e.getSource();
-            if(obj == btnRegister){
-                File file = new File("comments\\" + AppManager.getS_instance().getParser().getTitle(nRank) + ".txt");
+            if(obj == btnRegister && !txtComment.getText().equals("") ){
+                File file = new File("comments\\" + strReadTitle + ".txt");
                 try {
                     FileWriter fw = new FileWriter(file,true);
                     fw.write(txtComment.getText() + "\r");
-                    fw.write(txtPassword.getText() + "\r");
+                    if( txtPassword.getText().equals("") )
+                        fw.write("0000\r");
+                    else
+                        fw.write(txtPassword.getText() + "\r");
                     fw.flush();
                     fw.close();
                     modelList.addElement(txtComment.getText());
 
                     arrComment.add(txtComment.getText());
-                    arrPassword.add(txtPassword.getText());
+                    if( txtPassword.getText().equals("") )
+                        arrPassword.add("0000");
+                    else
+                        arrPassword.add(txtPassword.getText());
 
                     txtComment.setText("");
                     txtPassword.setText("");
@@ -237,6 +268,7 @@ public class CommentUI extends JPanel {
             }
         }//actionPerfomed
     }//ButtonRegister
+
 
 }//CommentUI
 
