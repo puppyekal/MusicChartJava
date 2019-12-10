@@ -9,39 +9,40 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import java.awt.*;
 
 /**
  * 
- * @author SejongUniv ï¿½ï¿½Ã¢ï¿½ï¿½
+ * @author SejongUniv ¿ÀÃ¢ÇÑ
  * @version 1.1
  *
  **/
 
-public class MelonChartParser extends MusicChartParser {
+public class MelonChartParser extends MusicChartParser{
 
 	/*
 	 * MelonChartParser Description (KO_KR)
 	 * 
 	 **************************************************
 	 * 
-	 * ** ï¿½ï¿½Æ® 100ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½ï¿½ï¿½ ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Íµï¿½ **
-	 * ï¿½ë·¡ ï¿½ï¿½ï¿½Ìµï¿½		(key : songId)
-	 * ï¿½ë·¡ ï¿½ï¿½ï¿½ï¿½		(key : rank)
-	 * ï¿½ë·¡ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½	(key : smallImageUrl)
-	 * ï¿½ë·¡ ï¿½ï¿½ï¿½ï¿½		(key : title)
-	 * ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½		(key : artist)
-	 * ï¿½Ù¹ï¿½ ï¿½Ì¸ï¿½		(key : albumName)
-	 * ï¿½ë·¡ ï¿½ï¿½ï¿½Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½	(key : likeNum)
+	 * ** Â÷Æ® 100°îÀ» ÆÄ½ÌÇÒ ½Ã¿¡ ¾òÀ» ¼ö ÀÖ´Â °Íµé **
+	 * ³ë·¡ ¾ÆÀÌµð		(key : songId)
+	 * ³ë·¡ ¼øÀ§		(key : rank)
+	 * ³ë·¡ ÀÛÀº ÀÌ¹ÌÁö	(key : smallImageUrl)
+	 * ³ë·¡ Á¦¸ñ		(key : title)
+	 * °¡¼ö ÀÌ¸§		(key : artist)
+	 * ¾Ù¹ü ÀÌ¸§		(key : albumName)
+	 * ³ë·¡ ÁÁ¾Æ¿ä °³¼ö	(key : likeNum)
 	 * 
-	 * ** ï¿½ï¿½Æ® 100ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½ï¿½ï¿½ ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½ **
-	 * - ï¿½Þ¼Òµï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
-	 * - [ï¿½ï¿½È¯ï¿½ï¿½] ï¿½Þ¼Òµï¿½ï¿½Ì¸ï¿½() ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ß´ï¿½.
+	 * ** Â÷Æ® 100°îÀ» ÆÄ½ÌÇÒ ½Ã¿¡ »ç¿ë °¡´ÉÇÑ ¸Þ¼Òµå **
+	 * - ¸Þ¼Òµå ÀÌ¸§ÀÌ °°Àº ¸Þ¼ÒµåµéÀº ¹ÝÈ¯ÇüÀÌ ¸ðµÎ °°´Ù.
+	 * - [¹ÝÈ¯Çü] ¸Þ¼ÒµåÀÌ¸§() °ú °°ÀÌ Ç¥±âÇß´Ù.
 	 * 
-	 * <ï¿½ï¿½Æ® 100ï¿½ï¿½ ï¿½Ä½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½>
+	 * <Â÷Æ® 100°î ÆÄ½Ì °ü·Ã ¸Þ¼Òµå>
 	 * [void]		chartDataParsing()
 	 * [boolean]	isParsed()
 	 * 
-	 * <ï¿½ï¿½Æ® 100ï¿½ï¿½ ï¿½ë·¡ ï¿½ï¿½ï¿½ï¿½ get ï¿½Þ¼Òµï¿½>
+	 * <Â÷Æ® 100°î ³ë·¡ Á¤º¸ get ¸Þ¼Òµå>
 	 * [JSONArray]	getChartList()
 	 * [JSONObject]	getSongData(int rank)	getSongData(String title)
 	 * [int]		getRank(String title)	getRank(JSONObject jObj)
@@ -54,23 +55,23 @@ public class MelonChartParser extends MusicChartParser {
 	 *
 	 **************************************************
 	 *
-	 * ** ï¿½ë·¡ 1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½ï¿½ï¿½ ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Íµï¿½ **
-	 * ï¿½ë·¡ Å« ï¿½Ì¹ï¿½ï¿½ï¿½		(key : imageUrl)
-	 * ï¿½ë·¡ ï¿½ß¸ï¿½ï¿½ï¿½		(key : releaseDate)
-	 * ï¿½ë·¡ ï¿½å¸£		(key : genre)
+	 * ** ³ë·¡ 1°³¿¡ ´ëÇÑ »ó¼¼ Á¤º¸¸¦ ÆÄ½ÌÇÒ ½Ã¿¡ ¾òÀ» ¼ö ÀÖ´Â °Íµé **
+	 * ³ë·¡ Å« ÀÌ¹ÌÁö		(key : imageUrl)
+	 * ³ë·¡ ¹ß¸ÅÀÏ		(key : releaseDate)
+	 * ³ë·¡ Àå¸£		(key : genre)
 	 *
-	 * ** ï¿½ë·¡ 1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½ï¿½ï¿½ ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½ **
-	 * - ï¿½Þ¼Òµï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
-	 * - [ï¿½ï¿½È¯ï¿½ï¿½] ï¿½Þ¼Òµï¿½ï¿½Ì¸ï¿½() ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½ß´ï¿½.
+	 * ** ³ë·¡ 1°³¿¡ ´ëÇÑ »ó¼¼ Á¤º¸¸¦ ÆÄ½ÌÇÒ ½Ã¿¡ »ç¿ë °¡´ÉÇÑ ¸Þ¼Òµå **
+	 * - ¸Þ¼Òµå ÀÌ¸§ÀÌ °°Àº ¸Þ¼ÒµåµéÀº ¹ÝÈ¯ÇüÀÌ ¸ðµÎ °°´Ù.
+	 * - [¹ÝÈ¯Çü] ¸Þ¼ÒµåÀÌ¸§() °ú °°ÀÌ Ç¥±âÇß´Ù.
 	 * 
-	 * <ï¿½ë·¡ 1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½>
+	 * <³ë·¡ 1°³¿¡ ´ëÇÑ »ó¼¼ Á¤º¸ ÆÄ½Ì °ü·Ã ¸Þ¼Òµå>
 	 * [void]		songDetailDataParsing(String songId)
 	 * [void]		songDetailDataParsing(JSONObject jObj)
 	 * [void]		songDetailDataParsing(int rank, JSONArray chartListData)
 	 * [void]		songDetailDataParsing(String title, JSONArray chartListData)
 	 * [boolean]	isParsed()
 	 * 
-	 * <ï¿½ë·¡ 1ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ get ï¿½Þ¼Òµï¿½>
+	 * <³ë·¡ 1°³¿¡ ´ëÇÑ »ó¼¼ Á¤º¸ get ¸Þ¼Òµå>
 	 * [JSONObject]	getSongData()
 	 * [String]		getImageUrl()		getImageUrl(JSONObject jObj)	getImageUrl(int rank)	getImageUrl(String title)
 	 * [String]		getReleaseDate()	getReleaseDate(JSONObject jObj)
@@ -80,160 +81,247 @@ public class MelonChartParser extends MusicChartParser {
 	 *
 	 */
 	
+	private String melonChartParsingTitle = "¸á·Ð Â÷Æ® ÆÄ½ÌÁß..";
+	private String melonChartParsingMessage = "¸á·Ð Â÷Æ® 100°î¿¡ ´ëÇÑ Á¤º¸¸¦ ºÒ·¯¿À´Â Áß ÀÔ´Ï´Ù :)";
+	
 	public MelonChartParser() {
 		songCount = 0;
-		chartList = AppManager.getS_instance().getJSONArray(1);
+		chartList = null;
 		songDetailInfo = null;
 		url = null;
+		chartThread = null;
+		songDetailThread = null;
+		progressMonitor = null;
 	}
 	
-	@Override
-	public void chartDataParsing() {
-		// ï¿½ï¿½ï¿½ ï¿½ï¿½Æ® 1~100ï¿½ï¿½ï¿½ï¿½ ï¿½ë·¡ï¿½ï¿½ ï¿½Ä½ï¿½ï¿½ï¿½
-		songCount = 0;
-		url = "https://www.melon.com/chart/index.htm";
+	private class ChartDataParsingThread implements Runnable {
+		@Override
+		public void run() {
+			// ¸á·Ð Â÷Æ® 1~100À§ÀÇ ³ë·¡¸¦ ÆÄ½ÌÇÔ
+			songCount = 0;
+			url = "https://www.melon.com/chart/index.htm";
 
-		try {
-			// ï¿½ï¿½ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½ï¿½á¿¡ ï¿½Ê¿ï¿½ï¿½ï¿½ header ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-			Connection melonConnection = Jsoup.connect(url).header("Accept",
-					"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
-					.header("Sec-Fetch-User", "?1").header("Upgrade-Insecure-Requests", "1")
-					.header("User-Agent",
-							"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36")
-					.method(Connection.Method.GET);
-
-			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü¾ï¿½ï¿½
-			Document melonDocument = melonConnection.get();
-
-			// 1~50ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½ ï¿½Ì´ï¿½ ï¿½ëµµï¿½ï¿½ ï¿½ï¿½ï¿½
-			Elements data1st50 = melonDocument.select("tr.lst50");
-			
-			// 51~100ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½ ï¿½Ì´ï¿½ ï¿½ëµµï¿½ï¿½ ï¿½ï¿½ï¿½
-			Elements data51st100 = melonDocument.select("tr.lst100");
-
-			if(!chartList.isEmpty()) chartList.clear();
-
-			for (Element elem : data1st50) { // 1~50ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½
-				// JSONObjectï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Û¾ï¿½
-				HashMap<String, Object> songAllInfo = new HashMap<String, Object>();
-
-				// key : songId, value : ï¿½ë·¡ ï¿½ï¿½ï¿½Ìµï¿½ - ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½
-				songAllInfo.put("songId", elem.attr("data-song-no").toString());
-
-				// key : rank, value : ï¿½ï¿½ï¿½ï¿½
-				songAllInfo.put("rank", elem.select("span.rank").first().text());
-
-				// key : smallImageUrl, value : ï¿½ë·¡ ï¿½Ì¹ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½Å© (Å« ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ detailDataParsingï¿½ï¿½ï¿½ï¿½ ï¿½Ù·ï¿½)
-				songAllInfo.put("smallImageUrl", elem.select("a > img").first().attr("src").toString());
-
-				// key : title, value : ï¿½ë·¡ ï¿½ï¿½ï¿½ï¿½
-				songAllInfo.put("title", elem.select("div.ellipsis > span > a").first().text().toString());
-
-				// key : artist, value : ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½
-				songAllInfo.put("artist", elem.select("div.ellipsis").get(1).select("a").first().text().toString());
-
-				// key : albumName, value : ï¿½Ù¹ï¿½ ï¿½Ì¸ï¿½
-				songAllInfo.put("albumName", elem.select("div.ellipsis").get(2).select("a").text().toString());
-
-				String likeNumUrl = "https://www.melon.com/commonlike/getSongLike.json?contsIds="
-						+ songAllInfo.get("songId").toString();
-
-				Document likeNumDocument = Jsoup.connect(likeNumUrl).header("Accept",
+			try {
+				// ¸á·Ð Â÷Æ® ¿¬°á¿¡ ÇÊ¿äÇÑ header ¼³Á¤ ¹× ¿¬°á
+				Connection melonConnection = Jsoup.connect(url).header("Accept",
 						"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
 						.header("Sec-Fetch-User", "?1").header("Upgrade-Insecure-Requests", "1")
 						.header("User-Agent",
 								"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36")
-						.ignoreContentType(true).get();
+						.method(Connection.Method.GET);
 
-				JSONParser parser = new JSONParser();
-				JSONObject obj = (JSONObject) parser.parse(likeNumDocument.text());
-				songAllInfo.put("likeNum",
-						((JSONObject) (((JSONArray) obj.get("contsLike")).get(0))).get("SUMMCNT").toString());
+				// ¿¬°á ÈÄ À¥ÆäÀÌÁö¸¦ ±Ü¾î¿È
+				Document melonDocument = melonConnection.get();
 
-				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ JSONObjectï¿½ï¿½ ï¿½ï¿½È¯
-				JSONObject jsonSongInfo = new JSONObject(songAllInfo);
+				// 1~50À§¿¡ ´ëÇÑ Á¤º¸¸¦ ºÒ·¯¿È, ¼øÀ§¿Í °îÀÇ »ó¼¼ÇÑ Á¤º¸¸¦ »Ì±â À§ÇÑ ¸µÅ©¸¦ »Ì´Â ¿ëµµ·Î »ç¿ë
+				Elements data1st50 = melonDocument.select("tr.lst50");
+				
+				// 51~100À§¿¡ ´ëÇÑ Á¤º¸¸¦ ºÒ·¯¿È, ¼øÀ§¿Í °îÀÇ »ó¼¼ÇÑ Á¤º¸¸¦ »Ì±â À§ÇÑ ¸µÅ©¸¦ »Ì´Â ¿ëµµ·Î »ç¿ë
+				Elements data51st100 = melonDocument.select("tr.lst100");
 
-				// JSONArrayï¿½ï¿½ ï¿½ï¿½ ï¿½ß°ï¿½
-				chartList.add(jsonSongInfo);
-				songCount++;
+				chartList = new JSONArray();
+
+				for (Element elem : data1st50) { // 1~50À§¿¡ ´ëÇÑ ³»¿ë ÆÄ½Ì
+					// JSONObject¿¡ µ¥ÀÌÅÍ¸¦ ³Ö±â À§ÇÑ ÀÛ¾÷
+					HashMap<String, Object> songAllInfo = new HashMap<String, Object>();
+
+					// key : songId, value : ³ë·¡ ¾ÆÀÌµð - »ó¼¼ Á¤º¸¸¦ ÆÄ½ÌÇÒ ¶§ ÇÊ¿äÇÔ
+					songAllInfo.put("songId", elem.attr("data-song-no").toString());
+
+					// key : rank, value : ¼øÀ§
+					songAllInfo.put("rank", elem.select("span.rank").first().text());
+
+					// key : smallImageUrl, value : ³ë·¡ ÀÌ¹ÌÁö(»çÀÌÁî ÀÛÀ½) ¸µÅ© (Å« »çÀÌÁî ÀÌ¹ÌÁö´Â detailDataParsing¿¡¼­ ´Ù·ë)
+					songAllInfo.put("smallImageUrl", elem.select("a > img").first().attr("src").toString());
+
+					// key : title, value : ³ë·¡ Á¦¸ñ
+					songAllInfo.put("title", elem.select("div.ellipsis > span > a").first().text().toString());
+
+					// key : artist, value : °¡¼ö ÀÌ¸§
+					songAllInfo.put("artist", elem.select("div.ellipsis").get(1).select("a").first().text().toString());
+
+					// key : albumName, value : ¾Ù¹ü ÀÌ¸§
+					songAllInfo.put("albumName", elem.select("div.ellipsis").get(2).select("a").text().toString());
+
+					String likeNumUrl = "https://www.melon.com/commonlike/getSongLike.json?contsIds="
+							+ songAllInfo.get("songId").toString();
+
+					Document likeNumDocument = Jsoup.connect(likeNumUrl).header("Accept",
+							"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
+							.header("Sec-Fetch-User", "?1").header("Upgrade-Insecure-Requests", "1")
+							.header("User-Agent",
+									"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36")
+							.ignoreContentType(true).get();
+
+					JSONParser parser = new JSONParser();
+					JSONObject obj = (JSONObject) parser.parse(likeNumDocument.text());
+					songAllInfo.put("likeNum",
+							((JSONObject) (((JSONArray) obj.get("contsLike")).get(0))).get("SUMMCNT").toString());
+
+					// °ªµéÀ» JSONObject·Î º¯È¯
+					JSONObject jsonSongInfo = new JSONObject(songAllInfo);
+
+					// JSONArray¿¡ °ª Ãß°¡
+					chartList.add(jsonSongInfo);
+					songCount++;
+				}
+
+				for (Element elem : data51st100) { // 51~100À§¿¡ ´ëÇÑ ³»¿ë ÆÄ½Ì
+					// JSONObject¿¡ µ¥ÀÌÅÍ¸¦ ³Ö±â À§ÇÑ ÀÛ¾÷
+					HashMap<String, Object> songAllInfo = new HashMap<String, Object>();
+
+					// key : songId, value : ³ë·¡ ¾ÆÀÌµð - »ó¼¼ Á¤º¸¸¦ ÆÄ½ÌÇÒ ¶§ ÇÊ¿äÇÔ
+					songAllInfo.put("songId", elem.attr("data-song-no").toString());
+
+					// key : rank, value : ¼øÀ§
+					songAllInfo.put("rank", elem.select("span.rank").first().text());
+
+					// key : smallImageUrl, value : ³ë·¡ ÀÌ¹ÌÁö(»çÀÌÁî ÀÛÀ½) ¸µÅ© (Å« »çÀÌÁî ÀÌ¹ÌÁö´Â
+					// detailDataParsing¿¡¼­ ´Ù·ë)
+					songAllInfo.put("smallImageUrl", elem.select("a > img").first().attr("src").toString());
+
+					// key : title, value : ³ë·¡ Á¦¸ñ
+					songAllInfo.put("title", elem.select("div.ellipsis > span > a").first().text().toString());
+
+					// key : artist, value : °¡¼ö ÀÌ¸§
+					songAllInfo.put("artist", elem.select("div.ellipsis").get(1).select("a").first().text().toString());
+
+					// key : albumName, value : ¾Ù¹ü ÀÌ¸§
+					songAllInfo.put("albumName", elem.select("div.ellipsis").get(2).select("a").text().toString());
+
+					String likeNumUrl = "https://www.melon.com/commonlike/getSongLike.json?contsIds=" + songAllInfo.get("songId").toString();
+
+					Document likeNumDocument = Jsoup.connect(likeNumUrl).header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
+							.header("Sec-Fetch-User", "?1")
+							.header("Upgrade-Insecure-Requests", "1")
+							.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36")
+							.ignoreContentType(true).get();
+
+					JSONParser parser = new JSONParser();
+					JSONObject obj = (JSONObject) parser.parse(likeNumDocument.text());
+					songAllInfo.put("likeNum", ((JSONObject) (((JSONArray) obj.get("contsLike")).get(0))).get("SUMMCNT").toString());
+
+					// °ªµéÀ» JSONObject·Î º¯È¯
+					JSONObject jsonSongInfo = new JSONObject(songAllInfo);
+
+					// JSONArray¿¡ °ª Ãß°¡
+					chartList.add(jsonSongInfo);
+					songCount++;
+					progressMonitor.setProgress(songCount);
+				}
+
+				// ÆÄ½Ì °á°ú Ãâ·Â(Å×½ºÆ®¿ë)
+				/*
+				for (Object o : chartList) {
+					if (o instanceof JSONObject)
+						System.out.println(((JSONObject) o));
+				}
+				*/
 			}
-
-			for (Element elem : data51st100) { // 51~100ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½
-				// JSONObjectï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Û¾ï¿½
-				HashMap<String, Object> songAllInfo = new HashMap<String, Object>();
-
-				// key : songId, value : ï¿½ë·¡ ï¿½ï¿½ï¿½Ìµï¿½ - ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½
-				songAllInfo.put("songId", elem.attr("data-song-no").toString());
-
-				// key : rank, value : ï¿½ï¿½ï¿½ï¿½
-				songAllInfo.put("rank", elem.select("span.rank").first().text());
-
-				// key : smallImageUrl, value : ï¿½ë·¡ ï¿½Ì¹ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½Å© (Å« ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½
-				// detailDataParsingï¿½ï¿½ï¿½ï¿½ ï¿½Ù·ï¿½)
-				songAllInfo.put("smallImageUrl", elem.select("a > img").first().attr("src").toString());
-
-				// key : title, value : ï¿½ë·¡ ï¿½ï¿½ï¿½ï¿½
-				songAllInfo.put("title", elem.select("div.ellipsis > span > a").first().text().toString());
-
-				// key : artist, value : ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½
-				songAllInfo.put("artist", elem.select("div.ellipsis").get(1).select("a").first().text().toString());
-
-				// key : albumName, value : ï¿½Ù¹ï¿½ ï¿½Ì¸ï¿½
-				songAllInfo.put("albumName", elem.select("div.ellipsis").get(2).select("a").text().toString());
-
-				String likeNumUrl = "https://www.melon.com/commonlike/getSongLike.json?contsIds=" + songAllInfo.get("songId").toString();
-
-				Document likeNumDocument = Jsoup.connect(likeNumUrl).header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
-						.header("Sec-Fetch-User", "?1")
-						.header("Upgrade-Insecure-Requests", "1")
-						.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36")
-						.ignoreContentType(true).get();
-
-				JSONParser parser = new JSONParser();
-				JSONObject obj = (JSONObject) parser.parse(likeNumDocument.text());
-				songAllInfo.put("likeNum", ((JSONObject) (((JSONArray) obj.get("contsLike")).get(0))).get("SUMMCNT").toString());
-
-				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ JSONObjectï¿½ï¿½ ï¿½ï¿½È¯
-				JSONObject jsonSongInfo = new JSONObject(songAllInfo);
-
-				// JSONArrayï¿½ï¿½ ï¿½ï¿½ ï¿½ß°ï¿½
-				chartList.add(jsonSongInfo);
-				songCount++;
+			catch (HttpStatusException e) {
+				e.printStackTrace();
+				chartList = null;
+				songDetailInfo = null;
+				System.out.println("¸¹Àº ¿äÃ»À¸·Î ÀÎÇØ ºÒ·¯¿À±â¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
+				songCount = 0;
+				return;
 			}
-
-			// ï¿½Ä½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½(ï¿½×½ï¿½Æ®ï¿½ï¿½)
-			/*
-			for (Object o : chartList) {
-				if (o instanceof JSONObject)
-					System.out.println(((JSONObject) o));
+			catch (NullPointerException e) {
+				e.printStackTrace();
+				chartList = null;
+				songDetailInfo = null;
+				System.out.println("Url ¸µÅ©°¡ Àß¸øµÇ¾ú°Å³ª, À¥ ÆäÀÌÁö ±¸Á¶°¡ º¯°æµÇ¾î ÆÄ½Ì¿¡ ½ÇÆÐÇß½À´Ï´Ù :(");
+				songCount = 0;
+				return;
 			}
-			*/
-			AppManager.getS_instance().setJSONArray(chartList, 0);
+			catch (Exception e) {
+				e.printStackTrace();
+				chartList = null;
+				songDetailInfo = null;
+				System.out.println("ÆÄ½ÌµµÁß ¿¡·¯°¡ ¹ß»ýÇß½À´Ï´Ù :(");
+				songCount = 0;
+				return;
+			}
 		}
-		catch (HttpStatusException e) {
-			e.printStackTrace();
-			chartList = null;
-			songDetailInfo = null;
-			System.out.println("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+	}
+	
+	private class SongDetailDataParsingThread implements Runnable {
+		@Override
+		public void run() {
 			songCount = 0;
-			return;
+			HashMap<String, Object> songAllInfo = new HashMap<String, Object>();
+
+			try {
+				// songId¸¦ ÅëÇØ °î¿¡ ´ëÇÑ »ó¼¼ÇÑ Á¤º¸¸¦ ¾ò±â À§ÇÑ Á¢±Ù
+				Connection songDetailConnection = Jsoup.connect(url).header("Accept",
+						"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
+						.header("Sec-Fetch-User", "?1").header("Upgrade-Insecure-Requests", "1")
+						.header("User-Agent",
+								"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36")
+						.method(Connection.Method.GET);
+				
+				progressMonitor.setProgress(50);
+
+				// °î¿¡ ´ëÇÑ »ó¼¼ÇÑ Á¤º¸ À¥ ÆäÀÌÁö¸¦ ±Ü¾î¿È
+				Document songDetailDocument = songDetailConnection.get();
+				Element songDetailInfo = songDetailDocument.select(".wrap_info").first();
+				
+				progressMonitor.setProgress(60);
+
+				String songImageUrl = songDetailInfo.getElementsByTag("img").first().attr("src");
+				songAllInfo.put("imageUrl", songImageUrl);
+				
+				progressMonitor.setProgress(70);
+
+				Element songDetailEtcInfo = songDetailInfo.select("dl.list").first();
+				
+				progressMonitor.setProgress(80);
+
+				String songReleaseDate = songDetailEtcInfo.getElementsByTag("dd").get(1).text();
+				songAllInfo.put("releaseDate", songReleaseDate);
+				
+				progressMonitor.setProgress(90);
+
+				String songGenre = songDetailEtcInfo.getElementsByTag("dd").get(2).text();
+				songAllInfo.put("genre", songGenre);
+				
+				progressMonitor.setProgress(100);
+				
+			}
+			catch (HttpStatusException e) {
+				e.printStackTrace();
+				chartList = null;
+				songDetailInfo = null;
+				System.out.println("¸¹Àº ¿äÃ»À¸·Î ÀÎÇØ ºÒ·¯¿À±â¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
+				songCount = 0;
+				return;
+			}
+			catch (NullPointerException e) {
+				e.printStackTrace();
+				chartList = null;
+				songDetailInfo = null;
+				System.out.println("Url ¸µÅ©°¡ Àß¸øµÇ¾ú°Å³ª, À¥ ÆäÀÌÁö ±¸Á¶°¡ º¯°æµÇ¾î ÆÄ½Ì¿¡ ½ÇÆÐÇß½À´Ï´Ù :(");
+				songCount = 0;
+				return;
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				chartList = null;
+				songDetailInfo = null;
+				System.out.println("ÆÄ½ÌµµÁß ¿¡·¯°¡ ¹ß»ýÇß½À´Ï´Ù :(");
+				songCount = 0;
+				return;
+			}
+			songDetailInfo = new JSONObject(songAllInfo);
+			songCount++;
 		}
-		catch (NullPointerException e) {
-			e.printStackTrace();
-			chartList = null;
-			songDetailInfo = null;
-			System.out.println("Url ï¿½ï¿½Å©ï¿½ï¿½ ï¿½ß¸ï¿½ï¿½Ç¾ï¿½ï¿½Å³ï¿½, ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ ï¿½Ä½Ì¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½ :(");
-			songCount = 0;
-			return;
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			chartList = null;
-			songDetailInfo = null;
-			System.out.println("ï¿½Ä½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½ :(");
-			songCount = 0;
-			return;
-		}
+	}
+	
+	@Override
+	public void chartDataParsing(Component parentComponent) {
+		if (chartThread == null) chartThread = new Thread(new ChartDataParsingThread());
+		progressMonitorManager(parentComponent, melonChartParsingTitle, melonChartParsingMessage);
+		chartThread.start();
 	}
 
 	private void songDetailDataParse(String url) {
@@ -242,7 +330,7 @@ public class MelonChartParser extends MusicChartParser {
 		HashMap<String, Object> songAllInfo = new HashMap<String, Object>();
 
 		try {
-			// songIdï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½î¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+			// songId¸¦ ÅëÇØ °î¿¡ ´ëÇÑ »ó¼¼ÇÑ Á¤º¸¸¦ ¾ò±â À§ÇÑ Á¢±Ù
 			Connection songDetailConnection = Jsoup.connect(url).header("Accept",
 					"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
 					.header("Sec-Fetch-User", "?1").header("Upgrade-Insecure-Requests", "1")
@@ -250,7 +338,7 @@ public class MelonChartParser extends MusicChartParser {
 							"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36")
 					.method(Connection.Method.GET);
 
-			// ï¿½î¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ü¾ï¿½ï¿½
+			// °î¿¡ ´ëÇÑ »ó¼¼ÇÑ Á¤º¸ À¥ ÆäÀÌÁö¸¦ ±Ü¾î¿È
 			Document songDetailDocument = songDetailConnection.get();
 			Element songDetailInfo = songDetailDocument.select(".wrap_info").first();
 
@@ -270,7 +358,7 @@ public class MelonChartParser extends MusicChartParser {
 			e.printStackTrace();
 			chartList = null;
 			songDetailInfo = null;
-			System.out.println("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+			System.out.println("¸¹Àº ¿äÃ»À¸·Î ÀÎÇØ ºÒ·¯¿À±â¿¡ ½ÇÆÐÇÏ¿´½À´Ï´Ù.");
 			songCount = 0;
 			return;
 		}
@@ -278,7 +366,7 @@ public class MelonChartParser extends MusicChartParser {
 			e.printStackTrace();
 			chartList = null;
 			songDetailInfo = null;
-			System.out.println("Url ï¿½ï¿½Å©ï¿½ï¿½ ï¿½ß¸ï¿½ï¿½Ç¾ï¿½ï¿½Å³ï¿½, ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ ï¿½Ä½Ì¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½ :(");
+			System.out.println("Url ¸µÅ©°¡ Àß¸øµÇ¾ú°Å³ª, À¥ ÆäÀÌÁö ±¸Á¶°¡ º¯°æµÇ¾î ÆÄ½Ì¿¡ ½ÇÆÐÇß½À´Ï´Ù :(");
 			songCount = 0;
 			return;
 		}
@@ -286,7 +374,7 @@ public class MelonChartParser extends MusicChartParser {
 			e.printStackTrace();
 			chartList = null;
 			songDetailInfo = null;
-			System.out.println("ï¿½Ä½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½ :(");
+			System.out.println("ÆÄ½ÌµµÁß ¿¡·¯°¡ ¹ß»ýÇß½À´Ï´Ù :(");
 			songCount = 0;
 			return;
 		}
@@ -295,13 +383,15 @@ public class MelonChartParser extends MusicChartParser {
 	}
 
 	@Override
-	public void songDetailDataParsing(String songId) {
+	public void songDetailDataParsing(String songId, Component parentComponent) {
 		url = "https://www.melon.com/song/detail.htm?songId=" + songId;
-		songDetailDataParse(url);
+		if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
+		progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
+		songDetailThread.start();
 	}
 
 	@Override
-	public void songDetailDataParsing(JSONObject jObj) {
+	public void songDetailDataParsing(JSONObject jObj, Component parentComponent) {
 		if (jObj == null) {
 			System.out.println(plzUseRightJSONObject);
 			return;
@@ -312,27 +402,31 @@ public class MelonChartParser extends MusicChartParser {
 			return;
 		}
 		url = "https://www.melon.com/song/detail.htm?songId=" + jObj.get("songId").toString();
-		songDetailDataParse(url);
+		if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
+		progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
+		songDetailThread.start();
 	}
 	
 	@Override
-	public void songDetailDataParsing(int rank, JSONArray chartListData) {
+	public void songDetailDataParsing(int rank, JSONArray chartListData, Component parentComponent) {
 		if (chartListData == null) {
-			System.out.println("ï¿½ï¿½Æ® ï¿½Ä½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½ :(");
+			System.out.println("Â÷Æ® ÆÄ½ÌµÈ µ¥ÀÌÅÍ°¡ ¾ø¾î ¸Þ¼Òµå ½ÇÇàÀ» Á¾·áÇÕ´Ï´Ù :(");
 			return;
 		}
 		url = "https://www.melon.com/song/detail.htm?songId="
 				+ ((JSONObject) chartListData.get(rank - 1)).get("songId").toString();
-		songDetailDataParse(url);
+		if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
+		progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
+		songDetailThread.start();
 	}
 	
 	@Override
-	public void songDetailDataParsing(String title, JSONArray chartListData) {
-		/* ï¿½ï¿½ï¿½ï¿½Ãµ ï¿½Ï´ï¿½ ï¿½Þ¼Òµï¿½ ï¿½Ô´Ï´ï¿½. titleï¿½ï¿½ ï¿½Â´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½Æ°ï¿½ï¿½ï¿½ ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È¿ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½. */
+	public void songDetailDataParsing(String title, JSONArray chartListData, Component parentComponent) {
+		/* ºñÃßÃµ ÇÏ´Â ¸Þ¼Òµå ÀÔ´Ï´Ù. title¿¡ ¸Â´Â µ¥ÀÌÅÍ¸¦ Ã³À½ºÎÅÍ Ã£¾Æ°¡¾ß ÇÏ±â ¶§¹®¿¡ Á» ´õ ºñÈ¿À²ÀûÀÔ´Ï´Ù. */
 		String tmpSongId = null;
 		
 		if (chartListData == null) {
-			System.out.println("ï¿½ï¿½Æ® ï¿½Ä½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½ :(");
+			System.out.println("Â÷Æ® ÆÄ½ÌµÈ µ¥ÀÌÅÍ°¡ ¾ø¾î ¸Þ¼Òµå ½ÇÇàÀ» Á¾·áÇÕ´Ï´Ù :(");
 			return;
 		}
 
@@ -344,16 +438,19 @@ public class MelonChartParser extends MusicChartParser {
 			}
 		}
 		if (tmpSongId == null) {
-			System.out.println("ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ï¿½Ï´ï¿½ ï¿½ë·¡ï¿½ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ :(");
+			System.out.println("Á¦¸ñ¿¡ ÇØ´çÇÏ´Â ³ë·¡°¡ Â÷Æ® µ¥ÀÌÅÍ¿¡ ¾ø¾î ºÒ·¯¿Ã ¼ö ¾ø½À´Ï´Ù :(");
 			return;
 		}
-		else
-			songDetailDataParse(url);
+		else {
+			if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
+			progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
+			songDetailThread.start();
+		}
 	}
 	
 	public String getLikeNum(int rank) {
 		if (rank < 1 || rank > 100) {
-			System.out.println("1~100ï¿½ï¿½ ï¿½Ì³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½");
+			System.out.println("1~100À§ ÀÌ³»ÀÇ ¼øÀ§¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä");
 			return null;
 		}
 		
@@ -409,7 +506,7 @@ public class MelonChartParser extends MusicChartParser {
 		}
 	}
 
-	// songDetailDataParsing ï¿½Ä¿ï¿½ï¿½ï¿½ ï¿½ï¿½ë°¡ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½
+	// songDetailDataParsing ÈÄ¿¡¸¸ »ç¿ë°¡´ÉÇÑ ¸Þ¼Òµå
 	public String getReleaseDate() {
 		if (!isParsed()) {
 			System.out.println(isNotParsed);
@@ -422,7 +519,7 @@ public class MelonChartParser extends MusicChartParser {
 		return null;
 	}
 	
-	// songDetailDataParsing ï¿½Ä¿ï¿½ï¿½ï¿½ ï¿½ï¿½ë°¡ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½
+	// songDetailDataParsing ÈÄ¿¡¸¸ »ç¿ë°¡´ÉÇÑ ¸Þ¼Òµå
 	public String getReleaseDate(JSONObject jObj) {
 		if (!isParsed()) {
 			System.out.println(isNotParsed);
@@ -447,7 +544,7 @@ public class MelonChartParser extends MusicChartParser {
 		return null;
 	}
 	
-	// songDetailDataParsing ï¿½Ä¿ï¿½ï¿½ï¿½ ï¿½ï¿½ë°¡ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½
+	// songDetailDataParsing ÈÄ¿¡¸¸ »ç¿ë°¡´ÉÇÑ ¸Þ¼Òµå
 	public String getGenre() {
 		if (!isParsed()) {
 			System.out.println(isNotParsed);
@@ -460,7 +557,7 @@ public class MelonChartParser extends MusicChartParser {
 		return null;
 	}
 
-	// songDetailDataParsing ï¿½Ä¿ï¿½ï¿½ï¿½ ï¿½ï¿½ë°¡ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½
+	// songDetailDataParsing ÈÄ¿¡¸¸ »ç¿ë°¡´ÉÇÑ ¸Þ¼Òµå
 	public String getGenre(JSONObject jObj) {
 		if (!isParsed()) {
 			System.out.println(isNotParsed);

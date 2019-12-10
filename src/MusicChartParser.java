@@ -1,5 +1,17 @@
+import java.awt.Component;
+import java.util.HashMap;
+
+import javax.swing.ProgressMonitor;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.jsoup.Connection;
+import org.jsoup.HttpStatusException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  * 
@@ -20,18 +32,31 @@ public abstract class MusicChartParser {
 	protected String isOnlyDetailParse = "해당 메소드는 노래 1개의 상세 정보 파싱에만 사용가능한 메소드 입니다 :(";
 	protected String jsonDontHaveKey = "JSONObject 내에 해당 키 값이 없습니다 :(";
 	protected String plzUseRightJSONObject = "올바른 JSONObject 값을 사용해주세요 :(";
+	protected String songDetailParsingTitle = "상세 정보 파싱중..";
+	protected String songDetailParsingMessage = "해당 노래에 대한 상세 정보를 파싱하는 중입니다 :)";
 	
-	public abstract void chartDataParsing();
-	public abstract void songDetailDataParsing(String songId);
-	public abstract void songDetailDataParsing(JSONObject jObj);
-	public abstract void songDetailDataParsing(int rank, JSONArray chartListData);
-	public abstract void songDetailDataParsing(String title, JSONArray chartListData); // 비추천 하는 메소드 입니다. title에 맞는 데이터를 처음부터 찾아가야 하기 때문에 좀 더 비효율적입니다.
+	public abstract void chartDataParsing(Component parentComponent);
+	public abstract void songDetailDataParsing(String songId, Component parentComponent);
+	public abstract void songDetailDataParsing(JSONObject jObj, Component parentComponent);
+	public abstract void songDetailDataParsing(int rank, JSONArray chartListData, Component parentComponent);
+	public abstract void songDetailDataParsing(String title, JSONArray chartListData, Component parentComponent); // 비추천 하는 메소드 입니다. title에 맞는 데이터를 처음부터 찾아가야 하기 때문에 좀 더 비효율적입니다.
+	
+	protected Thread chartThread;
+	protected Thread songDetailThread;
+	protected ProgressMonitor progressMonitor;
 	
 	public boolean isParsed() {
 		if (songCount == 0)
 			return false;
 		else
 			return true;
+	}
+	
+	public void progressMonitorManager(Component parentComponent, String title, String message) {
+		progressMonitor = new ProgressMonitor(parentComponent, title, message, 0, 100);
+		progressMonitor.setMaximum(100);
+		progressMonitor.setMillisToDecideToPopup(100);
+		progressMonitor.setMillisToPopup(100);
 	}
 	
 	public JSONArray getChartList() {
