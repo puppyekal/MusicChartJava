@@ -1,5 +1,6 @@
 import org.json.simple.JSONArray;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,7 +9,7 @@ public class MakeComment {
     private File Folder;
     private JSONArray arrChartList;
 
-    public MakeComment() {
+    public MakeComment(Component parentComponent) {
         Folder = new File("comments");
 
         if (!Folder.exists()) {
@@ -21,23 +22,23 @@ public class MakeComment {
         } else
             System.out.println("Folder is already exist");
 
-        makeRandomCommentTxt();
+        makeRandomCommentTxt(parentComponent);
 
 
     }//MakeComment | Constructor
 
-    private void makeRandomCommentTxt() {
+    private void makeRandomCommentTxt(Component parentComponent) {
         String singer, title, albumName;
         int Orig = AppManager.getS_instance().getSite_M_B_G();
         for(int j = 1; j <= 3; j++) {
             AppManager.getS_instance().setSite_M_B_G(j);
-            AppManager.getS_instance().DataPassing();
+            AppManager.getS_instance().DataPassing(parentComponent);
             for (int k = 1; k <= 100; k++) {
                 singer = AppManager.getS_instance().getParser().getArtistName(k);
                 title = AppManager.getS_instance().getParser().getTitle(k);
                 albumName = AppManager.getS_instance().getParser().getAlbumName(k);
 
-                File file = new File("comments\\" + resetTitlie(title) + ".txt");
+                File file = new File("comments\\" + reDefineTitle(title) + ".txt");
                 if (!file.exists()) {
                     try {
                         FileWriter fw = new FileWriter(file, true);
@@ -93,8 +94,10 @@ public class MakeComment {
     }//makeRandomCommentTxt method
 
 
-    private String resetTitlie(String title){
+    private String reDefineTitle(String title){
         String result;
+        if(title == null)
+            return null;
         result = title.replace("\'","");
         if(result.indexOf("(") != -1)
             result = result.substring(0, title.indexOf("("));

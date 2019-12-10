@@ -59,7 +59,7 @@ public class SitePanel extends JPanel {
 		add(lblTitle);
 		
 		MusicChartParser parser = AppManager.getS_instance().getParser();
-		if(!parser.isParsed()) parser.chartDataParsing();
+		if(!parser.isParsed()) parser.chartDataParsing(this);
 		
 		tableModel = new ChartModel(parser.getChartList());
 		

@@ -48,6 +48,8 @@ public class ChartPrimaryPanel extends JPanel{
 
     public ChartPrimaryPanel(){
 
+        new MakeComment(this);
+
         setBackground(new Color(255, 255, 255, 0));
         setBounds(1,0,1278,960);
         setLayout(null);
@@ -125,6 +127,11 @@ public class ChartPrimaryPanel extends JPanel{
 
 
     private class ButtonListener implements ActionListener {
+        private Component _viewLoading;
+        public void ButtionListener(Component parentComponent){
+            _viewLoading = parentComponent;
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             Object obj = e.getSource();
@@ -136,26 +143,26 @@ public class ChartPrimaryPanel extends JPanel{
                         formatted_Melon = current.format(formatter);
                         lblTime.setText("Renewal time : " + formatted_Melon);
                         AppManager.getS_instance().setSite_M_B_G(1);
-                        AppManager.getS_instance().DataPassing();
+                        AppManager.getS_instance().DataPassing(_viewLoading);
                         break;
                     case 2:
                         formatted_Bugs = current.format(formatter);
                         lblTime.setText("Renewal time : " + formatted_Bugs);
                         AppManager.getS_instance().setSite_M_B_G(2);
-                        AppManager.getS_instance().DataPassing();
+                        AppManager.getS_instance().DataPassing(_viewLoading);
                         break;
                     case 3:
                         formatted_Genie = current.format(formatter);
                         lblTime.setText("Renewal time : " + formatted_Genie);
                         AppManager.getS_instance().setSite_M_B_G(3);
-                        AppManager.getS_instance().DataPassing();
+                        AppManager.getS_instance().DataPassing(_viewLoading);
                         break;
                 }
             }//refresh 새로 파싱해옴
             if (obj == btnSite_M) {
             	if(AppManager.getS_instance().getSite_M_B_G() == 1) return;
                 AppManager.getS_instance().setSite_M_B_G(1);
-                if(!AppManager.getS_instance().getParser().isParsed()) AppManager.getS_instance().DataPassing();
+                if(!AppManager.getS_instance().getParser().isParsed()) AppManager.getS_instance().DataPassing(_viewLoading);
                 System.out.println("Melon");
                 pnlSitePanel.changeData();
                 lblTime.setText("Renewal time : " + formatted_Melon);
@@ -165,7 +172,7 @@ public class ChartPrimaryPanel extends JPanel{
             if (obj == btnSite_B) {
             	if(AppManager.getS_instance().getSite_M_B_G() == 2) return;
                 AppManager.getS_instance().setSite_M_B_G(2);
-                if(!AppManager.getS_instance().getParser().isParsed()) AppManager.getS_instance().DataPassing();
+                if(!AppManager.getS_instance().getParser().isParsed()) AppManager.getS_instance().DataPassing(_viewLoading);
                 System.out.println("Bugs");
                 pnlSitePanel.changeData();
                 lblTime.setText("Renewal time : " + formatted_Bugs);
@@ -175,7 +182,7 @@ public class ChartPrimaryPanel extends JPanel{
             if (obj == btnSite_G) {
             	if(AppManager.getS_instance().getSite_M_B_G() == 3) return;
                 AppManager.getS_instance().setSite_M_B_G(3);
-                if(!AppManager.getS_instance().getParser().isParsed()) AppManager.getS_instance().DataPassing();
+                if(!AppManager.getS_instance().getParser().isParsed()) AppManager.getS_instance().DataPassing(_viewLoading);
                 System.out.println("Genie");
                 pnlSitePanel.changeData();
                 lblTime.setText("Renewal time : " + formatted_Genie);

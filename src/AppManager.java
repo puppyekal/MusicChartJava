@@ -89,17 +89,17 @@ public class AppManager {
         }
     }
     
-    public void DataPassing() {
+    public void DataPassing(Component parentComponent) {
     	System.out.println("Parsing Data");
         switch (Site_M_B_G) {
             case 1:
-                melon.chartDataParsing();
+                melon.chartDataParsing(parentComponent);
                 break;
             case 2:
-                bugs.chartDataParsing();
+                bugs.chartDataParsing(parentComponent);
                 break;
             case 3:
-                genie.chartDataParsing();
+                genie.chartDataParsing(parentComponent);
                 break;
         }
     }
