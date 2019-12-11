@@ -14,7 +14,7 @@ import java.awt.*;
 /**
  * 
  * @author SejongUniv 오창한
- * @version 1.1
+ * @version 1.5
  *
  **/
 
@@ -39,7 +39,7 @@ public class MelonChartParser extends MusicChartParser{
 	 * - [반환형] 메소드이름() 과 같이 표기했다.
 	 * 
 	 * <차트 100곡 파싱 관련 메소드>
-	 * [void]		chartDataParsing()
+	 * [void]		chartDataParsing(Component parentComponent)
 	 * [boolean]	isParsed()
 	 * 
 	 * <차트 100곡 노래 정보 get 메소드>
@@ -65,10 +65,10 @@ public class MelonChartParser extends MusicChartParser{
 	 * - [반환형] 메소드이름() 과 같이 표기했다.
 	 * 
 	 * <노래 1개에 대한 상세 정보 파싱 관련 메소드>
-	 * [void]		songDetailDataParsing(String songId)
-	 * [void]		songDetailDataParsing(JSONObject jObj)
-	 * [void]		songDetailDataParsing(int rank, JSONArray chartListData)
-	 * [void]		songDetailDataParsing(String title, JSONArray chartListData)
+	 * [void]		songDetailDataParsing(String songId, Component parentComponent)
+	 * [void]		songDetailDataParsing(JSONObject jObj, Component parentComponent)
+	 * [void]		songDetailDataParsing(int rank, JSONArray chartListData, Component parentComponent)
+	 * [void]		songDetailDataParsing(String title, JSONArray chartListData, Component parentComponent)
 	 * [boolean]	isParsed()
 	 * 
 	 * <노래 1개에 대한 상세 정보 get 메소드>
@@ -320,75 +320,28 @@ public class MelonChartParser extends MusicChartParser{
 	@Override
 	public void chartDataParsing(Component parentComponent) {
 		if (chartThread == null) chartThread = new Thread(new ChartDataParsingThread());
+		if (chartThread.isAlive()) chartThread.stop();
 		progressMonitorManager(parentComponent, melonChartParsingTitle, melonChartParsingMessage);
 		chartThread.start();
-	}
-
-
-	private void songDetailDataParse(String url) {
-		
-		songCount = 0;
-		HashMap<String, Object> songAllInfo = new HashMap<String, Object>();
-
 		try {
-			// songId를 통해 곡에 대한 상세한 정보를 얻기 위한 접근
-			Connection songDetailConnection = Jsoup.connect(url).header("Accept",
-					"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
-					.header("Sec-Fetch-User", "?1").header("Upgrade-Insecure-Requests", "1")
-					.header("User-Agent",
-							"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36")
-					.method(Connection.Method.GET);
-
-			// 곡에 대한 상세한 정보 웹 페이지를 긁어옴
-			Document songDetailDocument = songDetailConnection.get();
-			Element songDetailInfo = songDetailDocument.select(".wrap_info").first();
-
-			String songImageUrl = songDetailInfo.getElementsByTag("img").first().attr("src");
-			songAllInfo.put("imageUrl", songImageUrl);
-
-			Element songDetailEtcInfo = songDetailInfo.select("dl.list").first();
-
-			String songReleaseDate = songDetailEtcInfo.getElementsByTag("dd").get(1).text();
-			songAllInfo.put("releaseDate", songReleaseDate);
-
-			String songGenre = songDetailEtcInfo.getElementsByTag("dd").get(2).text();
-			songAllInfo.put("genre", songGenre);
-			
-		}
-		catch (HttpStatusException e) {
+			chartThread.join();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
-			chartList = null;
-			songDetailInfo = null;
-			System.out.println("많은 요청으로 인해 불러오기에 실패하였습니다.");
-			songCount = 0;
-			return;
 		}
-		catch (NullPointerException e) {
-			e.printStackTrace();
-			chartList = null;
-			songDetailInfo = null;
-			System.out.println("Url 링크가 잘못되었거나, 웹 페이지 구조가 변경되어 파싱에 실패했습니다 :(");
-			songCount = 0;
-			return;
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			chartList = null;
-			songDetailInfo = null;
-			System.out.println("파싱도중 에러가 발생했습니다 :(");
-			songCount = 0;
-			return;
-		}
-		songDetailInfo = new JSONObject(songAllInfo);
-		songCount++;
 	}
 
 	@Override
 	public void songDetailDataParsing(String songId, Component parentComponent) {
 		url = "https://www.melon.com/song/detail.htm?songId=" + songId;
 		if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
+		if (songDetailThread.isAlive()) songDetailThread.stop();
 		progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
 		songDetailThread.start();
+		try {
+			songDetailThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -404,8 +357,14 @@ public class MelonChartParser extends MusicChartParser{
 		}
 		url = "https://www.melon.com/song/detail.htm?songId=" + jObj.get("songId").toString();
 		if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
+		if (songDetailThread.isAlive()) songDetailThread.stop();
 		progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
 		songDetailThread.start();
+		try {
+			songDetailThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -416,9 +375,16 @@ public class MelonChartParser extends MusicChartParser{
 		}
 		url = "https://www.melon.com/song/detail.htm?songId="
 				+ ((JSONObject) chartListData.get(rank - 1)).get("songId").toString();
+		System.out.println(url);
 		if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
+		if (chartThread.isAlive()) chartThread.stop();
 		progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
 		songDetailThread.start();
+		try {
+			chartThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -444,8 +410,14 @@ public class MelonChartParser extends MusicChartParser{
 		}
 		else {
 			if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
+			if (chartThread.isAlive()) chartThread.stop();
 			progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
 			songDetailThread.start();
+			try {
+				chartThread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
