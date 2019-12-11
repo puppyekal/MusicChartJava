@@ -48,23 +48,23 @@ public class ChartPrimaryPanel extends JPanel{
 
     public ChartPrimaryPanel(){
 
-        new MakeComment(this);
-
+    	new MakeComment(this);
+    	
         setBackground(new Color(255, 255, 255, 0));
         setBounds(1,0,1278,960);
         setLayout(null);
 
-        ButtonRefresh = new ButtonListener();
-        ButtonMelon = new ButtonListener();
-        ButtonBugs = new ButtonListener();
-        ButtonGenie = new ButtonListener();
+        ButtonRefresh = new ButtonListener(this);
+        ButtonMelon = new ButtonListener(this);
+        ButtonBugs = new ButtonListener(this);
+        ButtonGenie = new ButtonListener(this);
         ButtonSearch = new ButtonListener();
 
         btnRefresh = new JButton(new ImageIcon("Image/Refresh.png"));
         btnRefresh.setBounds(30,30,40,40);
         btnRefresh.setForeground(Color.DARK_GRAY);
         btnRefresh.setBackground(Color.lightGray);
-        btnRefresh.addActionListener(ButtonSearch);
+        btnRefresh.addActionListener(ButtonRefresh);
         add(btnRefresh);
 
         strCombo = new JComboBox<String>(strSearchCategory);
@@ -82,7 +82,7 @@ public class ChartPrimaryPanel extends JPanel{
         btnSearch.setBounds(1090,30,150,40);
         btnSearch.setForeground(Color.DARK_GRAY);
         btnSearch.setBackground(Color.lightGray);
-        btnSearch.addActionListener(ButtonRefresh);
+        btnSearch.addActionListener(ButtonSearch);
         add(btnSearch);
 
         btnSite_M = new JButton(new ImageIcon("Image/logo_Melon.png"));
@@ -128,7 +128,8 @@ public class ChartPrimaryPanel extends JPanel{
 
     private class ButtonListener implements ActionListener {
         private Component _viewLoading;
-        public void ButtionListener(Component parentComponent){
+        public ButtonListener() { }
+        public ButtonListener(Component parentComponent){
             _viewLoading = parentComponent;
         }
 
