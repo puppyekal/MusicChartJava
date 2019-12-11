@@ -1,4 +1,3 @@
-import com.google.gson.JsonObject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -144,8 +143,10 @@ public class CommentUI extends JPanel {
         lblArtist.setText(strRefinedArtist);
         Image image = null;
         URL url;
+        
         try {
-            url = new URL(AppManager.getS_instance().getParser().getImageUrl(rank));
+            url = new URL(AppManager.getS_instance().getDetailParser().getImageUrl());
+            System.out.println(url);
             image = ImageIO.read(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -177,18 +178,14 @@ public class CommentUI extends JPanel {
         this.setVisible(true);
         strTitle = AppManager.getS_instance().getParser().getTitle(rank);
         strArtist = AppManager.getS_instance().getParser().getArtistName(rank);
-/*
-        JSONArray jarr = AppManager.getS_instance().getParser().getChartList();
+
+        JSONArray chartListData = AppManager.getS_instance().getParser().getChartList();
         System.out.println("Detail Parsing is Start");
-        AppManager.getS_instance().getParser().songDetailDataParsing(rank,jarr,this);
-        try{
-            AppManager.getS_instance().getParser().getSongDetailThred().join();
-        }
-        catch(InterruptedException e){
-            e.printStackTrace();
-        }
+        
+        AppManager.getS_instance().detailDataPassing(rank, chartListData, this);
+        
         System.out.println("Detail Parsing is End");
-*/
+        
         strReadTitle = strTitle;
         strReadTitle = strReadTitle.replace("\'", "");
         if (strReadTitle.indexOf("(") != -1)

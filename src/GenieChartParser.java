@@ -242,8 +242,6 @@ public class GenieChartParser extends MusicChartParser {
 						.header("Upgrade-Insecure-Requests", "1")
 						.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36")
 						.method(Connection.Method.GET);
-				
-				progressMonitor.setProgress(50);
 
 				// 곡에 대한 상세한 정보 웹 페이지를 긁어옴
 				Document songDetailDocument = songDetailConnection.get();
@@ -251,28 +249,19 @@ public class GenieChartParser extends MusicChartParser {
 				
 				Element songDetailAlbumInfo = songDetailInfo.select("div.info-zone").first();
 				
-				progressMonitor.setProgress(60);
-				
 				// key : imageUrl, value : 큰 이미지 url 링크
 				songAllInfo.put("imageUrl", "https:" + songDetailInfo.select("div.photo-zone > a").first().attr("href").toString());
 
-				progressMonitor.setProgress(70);
 				
 				// key : genre, value : 노래 장르
 				songAllInfo.put("genre", songDetailAlbumInfo.select("ul.info-data > li").get(2).select("span.value").first().text().toString());
-				
-				progressMonitor.setProgress(80);
-				
+
 				// key : songTime, value : 재생 시간
 				songAllInfo.put("songTime", songDetailAlbumInfo.select("ul.info-data > li").get(3).select("span.value").first().text().toString());
-
-				progressMonitor.setProgress(90);
 				
 				// key : likeNum, value : 좋아요 개수
 				songAllInfo.put("likeNum", songDetailAlbumInfo.select("p.song-button-zone > span.sns-like > a.like.radius > em#emLikeCount").first().text().toString());
-				
-				progressMonitor.setProgress(100);
-				
+
 			}
 			catch (HttpStatusException e) {
 				e.printStackTrace();
@@ -306,8 +295,11 @@ public class GenieChartParser extends MusicChartParser {
 	
 	@Override
 	public void chartDataParsing(Component parentComponent) {
-		if (chartThread == null) chartThread = new Thread(new ChartDataParsingThread());
-		if (chartThread.isAlive()) chartThread.stop();
+		if (chartThread != null) {
+			if (chartThread.isAlive())
+				chartThread.stop();
+		}
+		chartThread = new Thread(new ChartDataParsingThread());
 		progressMonitorManager(parentComponent, genieChartParsingTitle, genieChartParsingMessage);
 		chartThread.start();
 		try {
@@ -320,9 +312,11 @@ public class GenieChartParser extends MusicChartParser {
 	@Override
 	public void songDetailDataParsing(String songId, Component parentComponent) {
 		url = "https://www.genie.co.kr/detail/songInfo?xgnm=" + songId;
-		if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
-		if (songDetailThread.isAlive()) songDetailThread.stop();
-		progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
+		if (songDetailThread != null) {
+			if (songDetailThread.isAlive()) 
+				songDetailThread.stop();
+		}
+		songDetailThread = new Thread(new SongDetailDataParsingThread());
 		songDetailThread.start();
 		try {
 			songDetailThread.join();
@@ -343,9 +337,11 @@ public class GenieChartParser extends MusicChartParser {
 			return;
 		}
 		url = "https://www.genie.co.kr/detail/songInfo?xgnm=" + obj.get("songId").toString();
-		if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
-		if (songDetailThread.isAlive()) songDetailThread.stop();
-		progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
+		if (songDetailThread != null) {
+			if (songDetailThread.isAlive()) 
+				songDetailThread.stop();
+		}
+		songDetailThread = new Thread(new SongDetailDataParsingThread());
 		songDetailThread.start();
 		try {
 			songDetailThread.join();
@@ -361,9 +357,12 @@ public class GenieChartParser extends MusicChartParser {
 			return;
 		}
 		url = "https://www.genie.co.kr/detail/songInfo?xgnm=" + ((JSONObject) chartListData.get(rank - 1)).get("songId").toString();
-		if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
-		if (songDetailThread.isAlive()) songDetailThread.stop();
-		progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
+		System.out.println(url);
+		if (songDetailThread != null) {
+			if (songDetailThread.isAlive()) 
+				songDetailThread.stop();
+		}
+		songDetailThread = new Thread(new SongDetailDataParsingThread());
 		songDetailThread.start();
 		try {
 			songDetailThread.join();
@@ -396,9 +395,11 @@ public class GenieChartParser extends MusicChartParser {
 			return;
 		}
 		else {
-			if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
-			if (songDetailThread.isAlive()) songDetailThread.stop();
-			progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
+			if (songDetailThread != null) {
+				if (songDetailThread.isAlive()) 
+					songDetailThread.stop();
+			}
+			songDetailThread = new Thread(new SongDetailDataParsingThread());
 			songDetailThread.start();
 			try {
 				songDetailThread.join();
@@ -408,7 +409,6 @@ public class GenieChartParser extends MusicChartParser {
 		}
 	}
 
-	
 	// 지니는 발매일(releaseDate)를 웹 페이지에서 보여주지 않아 getReleaseDate 메소드가 없음
 	
 	// songDetailDataParsing 후에만 사용가능한 메소드

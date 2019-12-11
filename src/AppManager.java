@@ -30,7 +30,9 @@ public class AppManager {
         melon = new MelonChartParser();
         bugs = new BugsChartParser();
         genie = new GenieChartParser();
-
+        detailMelon = null;
+        detailBugs = null;
+        detailGenie = null;
     }
 
     public JPanel getPrimaryPanel(){
@@ -107,28 +109,32 @@ public class AppManager {
         }
     }
 
-    public void detailDataPassing(Component parentComponent){
+    public void detailDataPassing(int rank, JSONArray chartListData, Component parentComponent){
         System.out.println("Parsing Detail Data");
         switch(Site_M_B_G){
             case 1:
-                if(detailMelon == null)
-                    detailMelon = new MelonChartParser();
+                if(detailMelon == null) detailMelon = new MelonChartParser();
+                detailMelon.songDetailDataParsing(rank, chartListData, parentComponent);
                 //Parsing Method
                 break;
             case 2:
                 if(detailBugs == null)
                     detailBugs = new BugsChartParser();
+                detailBugs.songDetailDataParsing(rank, chartListData, parentComponent);
+                System.out.println("Bugs Detail Parse");
                 //Parsing Method
                 break;
             case 3:
                 if(detailGenie == null)
                     detailGenie = new GenieChartParser();
+                detailGenie.songDetailDataParsing(rank, chartListData, parentComponent);
+                System.out.println("Genie Detail Parse");
                 //Parsing Method
                 break;
         }
     }
 
-    public MusicChartParser getdetailParser(Component parentComponent) {
+    public MusicChartParser getDetailParser() {
         System.out.println("Parsing Detail Data");
         switch (Site_M_B_G) {
             case 1:
@@ -136,21 +142,21 @@ public class AppManager {
                     System.out.println("Parser is not exist");
                     break;
                 }
-                //return Parser
-                break;
+                return detailMelon;
             case 2:
                 if (detailBugs == null) {
                     System.out.println("Parser is not exist");
                     //return Parser
                     break;
                 }
-                break;
+                return detailBugs;
             case 3:
                 if (detailGenie == null) {
                     System.out.println("Parser is not exist");
                     //return Parser
                     break;
                 }
+                return detailGenie;
         }
         return null;
     }

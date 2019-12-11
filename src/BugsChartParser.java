@@ -197,37 +197,25 @@ public class BugsChartParser extends MusicChartParser {
 						.header("User-Agent",
 								"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36")
 						.method(Connection.Method.GET);
-				
-				progressMonitor.setProgress(50);
 
 				// 곡에 대한 상세한 정보 웹 페이지를 긁어옴
 				Document songDetailDocument = songDetailConnection.get();
 				Element songDetailInfo = songDetailDocument.select("div.basicInfo").first();
-				
-				progressMonitor.setProgress(60);
-
+			
 				Element songDetailAlbumInfo = songDetailInfo.select("table.info").first().select("tbody").first();
 				Element songDetailLikeInfo = songDetailDocument.select("div.etcInfo").first();
-				
-				progressMonitor.setProgress(70);
 
 				// key : imageUrl, value : 큰 이미지 url 링크
 				songAllInfo.put("imageUrl",
 						songDetailInfo.select("div.photos").first().select("ul > li > a > img").attr("src").toString());
 				
-				progressMonitor.setProgress(80);
-
 				// key : songTime, value : 재생 시간
 				songAllInfo.put("songTime",
 						songDetailAlbumInfo.select("tr").get(3).select("td > time").get(0).text().toString());
 				
-				progressMonitor.setProgress(90);
-
 				// key : likeNum, value : 좋아요 개수
 				songAllInfo.put("likeNum",
 						songDetailLikeInfo.select("span").first().select("a > span > em").first().text().toString());
-				
-				progressMonitor.setProgress(100);
 
 			}
 			catch (HttpStatusException e) {
@@ -262,9 +250,12 @@ public class BugsChartParser extends MusicChartParser {
 	
 	@Override
 	public void chartDataParsing(Component parentComponent) {
-		if (chartThread == null) chartThread = new Thread(new ChartDataParsingThread());
-		if (chartThread.isAlive()) chartThread.stop();
-		progressMonitorManager(parentComponent, bugsChartParsingTitle, bugsChartParsingMessage);
+		if (chartThread != null) {
+			if (chartThread.isAlive())
+				chartThread.stop();
+		}
+		chartThread = new Thread(new ChartDataParsingThread());
+		progressMonitorManager(parentComponent, bugsChartParsingTitle, bugsChartParsingTitle);
 		chartThread.start();
 		try {
 			chartThread.join();
@@ -276,9 +267,11 @@ public class BugsChartParser extends MusicChartParser {
 	@Override
 	public void songDetailDataParsing(String songId, Component parentComponent) {
 		url = "https://music.bugs.co.kr/track/" + songId + "?wl_ref=list_tr_08_chart";
-		if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
-		if (songDetailThread.isAlive()) songDetailThread.stop();
-		progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
+		if (songDetailThread != null) {
+			if (songDetailThread.isAlive()) 
+				songDetailThread.stop();
+		}
+		songDetailThread = new Thread(new SongDetailDataParsingThread());
 		songDetailThread.start();
 		try {
 			songDetailThread.join();
@@ -299,9 +292,11 @@ public class BugsChartParser extends MusicChartParser {
 			return;
 		}
 		url = "https://music.bugs.co.kr/track/" + obj.get("songId").toString() + "?wl_ref=list_tr_08_chart";
-		if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
-		if (songDetailThread.isAlive()) songDetailThread.stop();
-		progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
+		if (songDetailThread != null) {
+			if (songDetailThread.isAlive()) 
+				songDetailThread.stop();
+		}
+		songDetailThread = new Thread(new SongDetailDataParsingThread());
 		songDetailThread.start();
 		try {
 			songDetailThread.join();
@@ -318,9 +313,11 @@ public class BugsChartParser extends MusicChartParser {
 		}
 		url = "https://music.bugs.co.kr/track/" + ((JSONObject) chartListData.get(rank - 1)).get("songId").toString()
 				+ "?wl_ref=list_tr_08_chart";
-		if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
-		if (songDetailThread.isAlive()) songDetailThread.stop();
-		progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
+		if (songDetailThread != null) {
+			if (songDetailThread.isAlive()) 
+				songDetailThread.stop();
+		}
+		songDetailThread = new Thread(new SongDetailDataParsingThread());
 		songDetailThread.start();
 		try {
 			songDetailThread.join();
@@ -354,9 +351,11 @@ public class BugsChartParser extends MusicChartParser {
 			return;
 		}
 		else {
-			if (songDetailThread == null) songDetailThread = new Thread(new SongDetailDataParsingThread());
-			if (songDetailThread.isAlive()) songDetailThread.stop();
-			progressMonitorManager(parentComponent, songDetailParsingTitle, songDetailParsingMessage);
+			if (songDetailThread != null) {
+				if (songDetailThread.isAlive()) 
+					songDetailThread.stop();
+			}
+			songDetailThread = new Thread(new SongDetailDataParsingThread());
 			songDetailThread.start();
 			try {
 				songDetailThread.join();
