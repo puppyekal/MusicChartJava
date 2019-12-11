@@ -181,11 +181,11 @@ public class SitePanel extends JPanel {
 		
 		public ChartModel(JSONArray musics) {
 			arrColumnName = new String[5];
-			arrColumnName[0] = "순위";
-			arrColumnName[1] = "이미지";
-			arrColumnName[2] = "곡명";
-			arrColumnName[3] = "가수";
-			arrColumnName[4] = "앨범";
+			arrColumnName[0] = "Rank";
+			arrColumnName[1] = "Album Image";
+			arrColumnName[2] = "Title";
+			arrColumnName[3] = "Singer";
+			arrColumnName[4] = "Album Title";
 			
 			chartData = new Object[musics.size()][5];
 			for(int i = 0; i < musics.size(); i++) chartData[i] = new Object[5];

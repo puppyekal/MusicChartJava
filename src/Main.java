@@ -1,8 +1,9 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class Main {
     public static void main(String[] args){
-        JFrame frame = new JFrame("음악의 민족");
+        JFrame frame = new JFrame("The People of Music");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 

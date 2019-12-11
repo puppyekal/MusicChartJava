@@ -14,6 +14,9 @@ public class AppManager {
     private CommentUI pnlCommentUI;
     private ChartPrimaryPanel pnlChartPrimary;
     private JPanel primaryPanel;
+    private MelonChartParser detailMelon;
+    private BugsChartParser detailBugs;
+    private GenieChartParser detailGenie;
 
     private AppManager(){
     	s_instance = this;
@@ -102,6 +105,54 @@ public class AppManager {
                 genie.chartDataParsing(parentComponent);
                 break;
         }
+    }
+
+    public void detailDataPassing(Component parentComponent){
+        System.out.println("Parsing Detail Data");
+        switch(Site_M_B_G){
+            case 1:
+                if(detailMelon == null)
+                    detailMelon = new MelonChartParser();
+                //Parsing Method
+                break;
+            case 2:
+                if(detailBugs == null)
+                    detailBugs = new BugsChartParser();
+                //Parsing Method
+                break;
+            case 3:
+                if(detailGenie == null)
+                    detailGenie = new GenieChartParser();
+                //Parsing Method
+                break;
+        }
+    }
+
+    public MusicChartParser getdetailParser(Component parentComponent) {
+        System.out.println("Parsing Detail Data");
+        switch (Site_M_B_G) {
+            case 1:
+                if (detailMelon == null) {
+                    System.out.println("Parser is not exist");
+                    break;
+                }
+                //return Parser
+                break;
+            case 2:
+                if (detailBugs == null) {
+                    System.out.println("Parser is not exist");
+                    //return Parser
+                    break;
+                }
+                break;
+            case 3:
+                if (detailGenie == null) {
+                    System.out.println("Parser is not exist");
+                    //return Parser
+                    break;
+                }
+        }
+        return null;
     }
     
     public void setJSONArray(JSONArray arr, int index) {
