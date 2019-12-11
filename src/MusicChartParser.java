@@ -44,7 +44,11 @@ public abstract class MusicChartParser {
 	protected Thread chartThread;
 	protected Thread songDetailThread;
 	protected ProgressMonitor progressMonitor;
-	
+
+	public Thread getChartThread(){return chartThread;}
+
+	public Thread getSongDetailThred(){return songDetailThread;}
+
 	public boolean isParsed() {
 		if (songCount == 0)
 			return false;

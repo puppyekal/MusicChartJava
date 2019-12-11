@@ -324,6 +324,7 @@ public class MelonChartParser extends MusicChartParser{
 		chartThread.start();
 	}
 
+
 	private void songDetailDataParse(String url) {
 		
 		songCount = 0;

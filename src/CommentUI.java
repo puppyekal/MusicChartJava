@@ -1,3 +1,4 @@
+import com.google.gson.JsonObject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -13,20 +14,32 @@ import java.util.ArrayList;
 
 public class CommentUI extends JPanel {
 
-    private JPanel pnlMain,pnlCommentField,pnlMusicInfo;
-    private JTextField txtComment,txtPassword;
-    private JButton btnRegister,btnDelete,btnBack;
-    private ArrayList<String> arrComment;
-    private ArrayList<String> arrPassword;
-    private JList listComment;
-    private DefaultListModel modelList;
-    private int nRank;
-    private String strTitle,strArtist,strAlbum,strReadTitle;
-    private JLabel lblStrTitle,lblStrArtist;
-    private JLabel lblTitle,lblArtist,lblImage;
-    private ImageIcon imgAlbum;
+    private JPanel              pnlCommentField,pnlMusicInfo;
+    private JTextField          txtComment,txtPassword;
+    private JButton             btnRegister,btnDelete,btnBack;
+    private ArrayList<String>   arrComment;
+    private ArrayList<String>   arrPassword;
+    private JList               listComment;
+    private DefaultListModel    modelList;
+    private String              strTitle,strArtist,strReadTitle;
+    private JLabel              lblStrTitle,lblStrArtist;
+    private JLabel              lblTitle,lblArtist,lblImage;
+    /*
+    * Description of Class
+    *   음악 정보를 Paser에 AppManager를 통하여 직접 접근하여서 노래를 받아온다.
+    *   노래를 받아오는 rank 는 SitePanel 에서 몇번 째 노래를 클릭했는지 받아온다.
+    * */
 
 
+    /*
+     *Description of Constructor
+     *   사용된 폰트
+     *      한강남산체 M
+     *      배달의민족 을지로체 TTF
+     *      서울남산체 B / M
+     *  기본적인 UI에 대한 기본 설정을 해준다.
+     *  투명 패널을 지니고 있다.
+     * */
     public CommentUI(){
         setPreferredSize(new Dimension(1024,768));
         setBackground(new Color(0,0,0,25));
@@ -36,14 +49,14 @@ public class CommentUI extends JPanel {
         setLayout(null);
 
         pnlMusicInfo = new JPanel();
-        pnlMusicInfo.setBackground(new Color(200,200,200));
-        pnlMusicInfo.setBounds(32,32,960,80);
+        pnlMusicInfo.setBackground(new Color(255,255,255,50));
+        pnlMusicInfo.setBounds(32,32,960,160);
         pnlMusicInfo.setLayout(null);
         add(pnlMusicInfo);
 
         pnlCommentField = new JPanel();
         pnlCommentField.setBackground(Color.white);
-        pnlCommentField.setBounds(32,144,960,520);
+        pnlCommentField.setBounds(32,224,960,440);
         pnlCommentField.setLayout(null);
         add(pnlCommentField);
 
@@ -77,33 +90,33 @@ public class CommentUI extends JPanel {
 
 
         lblTitle = new JLabel();
-        lblTitle.setBounds(110,10,400,60);
-        lblTitle.setHorizontalAlignment(JLabel.LEFT);
+        lblTitle.setBounds(110,10,700,60);
+        lblTitle.setHorizontalAlignment(SwingConstants.LEFT);
         lblTitle.setFont(new Font("서울남산체 B",Font.PLAIN,40));
         pnlMusicInfo.add(lblTitle);
 
         lblArtist = new JLabel();
-        lblArtist.setBounds(670,10,220,60);
+        lblArtist.setBounds(110,90,700,60);
         lblArtist.setFont(new Font("서울남산체 B",Font.PLAIN,40));
-        lblArtist.setHorizontalAlignment(JLabel.LEFT);
+        lblArtist.setHorizontalAlignment(SwingConstants.LEFT);
         pnlMusicInfo.add(lblArtist);
 
         Font fnt1 = new Font("한강남산체 M",Font.BOLD,30);
 
         lblStrArtist = new JLabel("Artist : ");
         lblStrArtist.setFont(fnt1);
-        lblStrArtist.setBounds(510,10,160,60);
-        lblStrArtist.setHorizontalAlignment(JLabel.CENTER);
+        lblStrArtist.setBounds(10,90,160,60);
+        lblStrArtist.setHorizontalAlignment(SwingConstants.LEFT);
         pnlMusicInfo.add(lblStrArtist);
 
         lblStrTitle = new JLabel("Title : ");
         lblStrTitle.setFont(fnt1);
         lblStrTitle.setBounds(10,10,100,60);
+        lblStrTitle.setHorizontalAlignment(SwingConstants.LEFT);
         pnlMusicInfo.add(lblStrTitle);
 
-        imgAlbum = new ImageIcon();
-        lblImage = new JLabel(imgAlbum);
-        lblImage.setBounds(900,10,50,50);
+        lblImage = new JLabel();
+        lblImage.setBounds(800,0,160,160);
         pnlMusicInfo.add(lblImage);
 
         arrComment = new ArrayList<>();
@@ -113,7 +126,11 @@ public class CommentUI extends JPanel {
         modelList = new DefaultListModel();
     }//Constructor
 
-    private void addMusicInfo(){
+    /*
+     *Description of Method addMusicInfo
+     *   pnlMusicInfo 위에 올라가는 이미지와 String을 정해주는 메소드
+     * */
+    private void addMusicInfo(int rank){
         String strRefinedTitle = strTitle;
         if(strRefinedTitle.indexOf("(") != -1){
             strRefinedTitle = strRefinedTitle.substring(0,strRefinedTitle.indexOf("("));
@@ -125,11 +142,24 @@ public class CommentUI extends JPanel {
             strRefinedArtist = strRefinedArtist.substring(0,strRefinedArtist.indexOf("("));
         }
         lblArtist.setText(strRefinedArtist);
-
-
+        Image image = null;
+        URL url;
+        try {
+            url = new URL(AppManager.getS_instance().getParser().getImageUrl(rank));
+            image = ImageIO.read(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        lblImage.setIcon(new ImageIcon(image));
 
     }//addMusicInfo
 
+    /*
+     *Description of Method addList
+     *   Txt 파일에서 읽어온 ArrryList - Comment 를 JList에 올려주는 함수
+     * */
     private void addList(){
         for(String ptr:arrComment){
             modelList.addElement(ptr);
@@ -140,14 +170,24 @@ public class CommentUI extends JPanel {
         pnlCommentField.add(listComment);
     }
 
+    /*Description of Method reNewalInfo
+     *  Site Panel에서 받아온 rank를 기반으로 Parser에 직접접근하여 정보를 업데이트 해준다.
+     * */
     public void reNewalInfo(int rank){
-        nRank = rank;
         this.setVisible(true);
         strTitle = AppManager.getS_instance().getParser().getTitle(rank);
         strArtist = AppManager.getS_instance().getParser().getArtistName(rank);
-        strAlbum = AppManager.getS_instance().getParser().getAlbumName(rank);
 
-
+        JSONObject jObj = AppManager.getS_instance().getParser().getSongData(rank);
+        /*
+        AppManager.getS_instance().getParser().songDetailDataParsing(jObj,this);
+        try{
+            AppManager.getS_instance().getParser().getSongDetailThred().join();
+        }
+        catch(InterruptedException e){
+            e.printStackTrace();
+        }
+        */
 
         strReadTitle = strTitle;
         strReadTitle = strReadTitle.replace("\'", "");
@@ -158,9 +198,11 @@ public class CommentUI extends JPanel {
 
         readComment();
         addList();
-        addMusicInfo();
+        addMusicInfo(rank);
     }
-
+    /*Description of Method readComment
+     *   덧글과 각 비밀번호가 적혀있는 txt 파일을 읽어와 각각의 ArrayList에 저장하는 메소드
+     * */
     private void readComment(){
         File file;
         System.out.println("Read " + strTitle + ".txt File");
@@ -179,7 +221,13 @@ public class CommentUI extends JPanel {
         }
 
     }//readComment
-
+    /*
+     *Description of Method removeAtTxt
+     *  Parameter : int - index
+     *  btnDelete가 작동하면 Txt파일에도 정보를 삭제해야 하므로
+     *  몇 번째 index(파라미터)에서 삭제가 일어났는지 받아오고 난 후
+     *  그 인덱스에 맞는 txt 파일을 삭제해주는 메소드
+     * */
     private void removeAtTxt(int index){
         System.out.println(index);
         File file = new File("comments\\" + strReadTitle + ".txt");
@@ -209,7 +257,10 @@ public class CommentUI extends JPanel {
             e.printStackTrace();
         }
     }
-
+    /*
+     *Description of Method clearAll
+     *   btnBack(ChartPrimaryPanel로 돌아가는 버튼)이 일어나면 싱글톤 패턴이기 때문에 원래 있던 정보는 모두다
+     *  삭제가 되어야한다. 그러므로 모든 정보를 초기화 해주는 메소드드     * */
     private void clearAll(){
         txtPassword.setText("");
         txtComment.setText("");
