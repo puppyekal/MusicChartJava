@@ -33,12 +33,6 @@ public class MakeComment {
         for(int j = 1; j <= 3; j++) {
             AppManager.getS_instance().setSite_M_B_G(j);
             AppManager.getS_instance().DataPassing(parentComponent);
-            try {
-                AppManager.getS_instance().getParser().getChartThread().join();
-            }
-            catch (InterruptedException e){
-                e.printStackTrace();
-            }
             for (int k = 1; k <= 100; k++) {
 
                 singer = AppManager.getS_instance().getParser().getArtistName(k);

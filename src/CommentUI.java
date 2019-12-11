@@ -148,6 +148,7 @@ public class CommentUI extends JPanel {
             url = new URL(AppManager.getS_instance().getDetailParser().getImageUrl());
             System.out.println(url);
             image = ImageIO.read(url);
+            image = image.getScaledInstance(160,160,Image.SCALE_SMOOTH);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
