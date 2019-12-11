@@ -177,18 +177,18 @@ public class CommentUI extends JPanel {
         this.setVisible(true);
         strTitle = AppManager.getS_instance().getParser().getTitle(rank);
         strArtist = AppManager.getS_instance().getParser().getArtistName(rank);
-
-        JSONObject jObj = AppManager.getS_instance().getParser().getSongData(rank);
-        /*
-        AppManager.getS_instance().getParser().songDetailDataParsing(jObj,this);
+/*
+        JSONArray jarr = AppManager.getS_instance().getParser().getChartList();
+        System.out.println("Detail Parsing is Start");
+        AppManager.getS_instance().getParser().songDetailDataParsing(rank,jarr,this);
         try{
             AppManager.getS_instance().getParser().getSongDetailThred().join();
         }
         catch(InterruptedException e){
             e.printStackTrace();
         }
-        */
-
+        System.out.println("Detail Parsing is End");
+*/
         strReadTitle = strTitle;
         strReadTitle = strReadTitle.replace("\'", "");
         if (strReadTitle.indexOf("(") != -1)
