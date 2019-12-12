@@ -54,9 +54,11 @@ public abstract class MusicChartParser {
 	
 	public void progressMonitorManager(Component parentComponent, String title, String message) {
 		progressMonitor = new ProgressMonitor(parentComponent, title, message, 0, 100);
+		progressMonitor.setMinimum(0);
 		progressMonitor.setMaximum(100);
 		progressMonitor.setMillisToDecideToPopup(100);
 		progressMonitor.setMillisToPopup(100);
+		progressMonitor.setProgress(0);
 	}
 	
 	public JSONArray getChartList() {

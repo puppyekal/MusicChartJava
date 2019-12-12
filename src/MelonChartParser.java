@@ -164,9 +164,9 @@ public class MelonChartParser extends MusicChartParser{
 					// JSONArray에 값 추가
 					chartList.add(jsonSongInfo);
 					songCount++;
-					progressMonitor.setProgress(songCount);
+					//progressMonitor.setProgress(songCount);
 				}
-
+			
 				for (Element elem : data51st100) { // 51~100위에 대한 내용 파싱
 					// JSONObject에 데이터를 넣기 위한 작업
 					HashMap<String, Object> songAllInfo = new HashMap<String, Object>();
@@ -208,9 +208,11 @@ public class MelonChartParser extends MusicChartParser{
 					// JSONArray에 값 추가
 					chartList.add(jsonSongInfo);
 					songCount++;
-					progressMonitor.setProgress(songCount);
+					
+					//progressMonitor.setProgress(songCount);
 				}
 
+				
 				// 파싱 결과 출력(테스트용)
 				/*
 				for (Object o : chartList) {
@@ -308,17 +310,22 @@ public class MelonChartParser extends MusicChartParser{
 	@Override
 	public void chartDataParsing(Component parentComponent) {
 		if (chartThread != null) {
-			if (chartThread.isAlive())
+			if (chartThread.isAlive()) {
 				chartThread.stop();
+				System.out.println("Chart Thread is Alive");
+			}
+			else
+				System.out.println("Chart Thread is dead");
 		}
 		chartThread = new Thread(new ChartDataParsingThread());
-		progressMonitorManager(parentComponent, melonChartParsingTitle, melonChartParsingMessage);
+		//progressMonitorManager(parentComponent, melonChartParsingTitle, melonChartParsingMessage);
 		chartThread.start();
 		try {
 			chartThread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		System.out.println("ETSt");
 	}
 
 	@Override

@@ -147,7 +147,7 @@ public class GenieChartParser extends MusicChartParser {
 					// JSONArray에 값 추가
 					chartList.add(jsonSongInfo);
 					songCount++;
-					progressMonitor.setProgress(songCount);
+				//	progressMonitor.setProgress(songCount);
 				}
 				
 				String url51_100 = genieDocument1_50.select("div.page-nav.rank-page-nav").first().select("a").get(1).attr("href").toString();
@@ -193,7 +193,7 @@ public class GenieChartParser extends MusicChartParser {
 					// JSONArray에 값 추가
 					chartList.add(jsonSongInfo);
 					songCount++;
-					progressMonitor.setProgress(songCount);
+					//progressMonitor.setProgress(songCount);
 				}
 				
 				// 파싱 결과 출력(테스트용)
@@ -300,7 +300,7 @@ public class GenieChartParser extends MusicChartParser {
 				chartThread.stop();
 		}
 		chartThread = new Thread(new ChartDataParsingThread());
-		progressMonitorManager(parentComponent, genieChartParsingTitle, genieChartParsingMessage);
+		// progressMonitorManager(parentComponent, genieChartParsingTitle, genieChartParsingMessage);
 		chartThread.start();
 		try {
 			chartThread.join();

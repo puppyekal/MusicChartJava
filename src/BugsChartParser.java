@@ -144,7 +144,7 @@ public class BugsChartParser extends MusicChartParser {
 					// JSONArray에 값 추가
 					chartList.add(jsonSongInfo);
 					songCount++;
-					progressMonitor.setProgress(songCount);
+					// progressMonitor.setProgress(songCount);
 				}
 
 				// 파싱 결과 출력(테스트용)
@@ -255,7 +255,7 @@ public class BugsChartParser extends MusicChartParser {
 				chartThread.stop();
 		}
 		chartThread = new Thread(new ChartDataParsingThread());
-		progressMonitorManager(parentComponent, bugsChartParsingTitle, bugsChartParsingTitle);
+		// progressMonitorManager(parentComponent, bugsChartParsingTitle, bugsChartParsingTitle);
 		chartThread.start();
 		try {
 			chartThread.join();

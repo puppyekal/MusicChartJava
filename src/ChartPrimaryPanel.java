@@ -145,6 +145,7 @@ public class ChartPrimaryPanel extends JPanel{
                         lblTime.setText("Renewal time : " + formatted_Melon);
                         AppManager.getS_instance().setSite_M_B_G(1);
                         AppManager.getS_instance().DataPassing(_viewLoading);
+                        System.out.println("why?");
                         break;
                     case 2:
                         formatted_Bugs = current.format(formatter);
