@@ -22,6 +22,7 @@ public class AppManager {
         chartData[1] = new JSONArray();
         chartData[2] = new JSONArray();
 
+        ;;
         melon = new MelonChartParser();
         bugs = new BugsChartParser();
         genie = new GenieChartParser();
